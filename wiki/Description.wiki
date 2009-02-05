@@ -17,7 +17,7 @@ Users are recognize via their jabber id.
 = Parts to develop =
 
   * [Gui] (!QtGui/QGraphicsView)
-  * Game View (QGraphicsView)
+  * [GameView] (QGraphicsView)
   * Cards packs (!QtCore)
   * Network (!QtCore/Xmpp)
   * Sound (Phonon)
