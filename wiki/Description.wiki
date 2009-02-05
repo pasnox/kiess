@@ -7,7 +7,7 @@ Team game will be supported and the max players count per server will be 2 for s
 
 = Parts to develop =
 
-  * [Gui] (QtGui/QGraphicsView)
+  * [Gui] (!QtGui/QGraphicsView)
   * Game View (QGraphicsView)
   * Cards packs (!QtCore)
   * Network (!QtCore/Xmpp)
