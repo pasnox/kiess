@@ -3,11 +3,11 @@
 = Introduction =
 
 Kiess aiming at a "Who's who?" like game playable in network via xmpp.
-Team game will be supported and the max player count per server will be 2 for single player game or 4 for team game.
+Team game will be supported and the max players count per server will be 2 for single player game or 4 for team game.
 
 = Parts to develop =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+* Gui (QtGui/QGraphicsView)
+* Game View (QGraphicsView)
+* Cards packs (QtCore)
+* Network (QtCore/Xmpp)
