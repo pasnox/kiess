@@ -13,4 +13,5 @@ The Game View will consist of QGraphicsView / QGraphicsScene parts
  * set display,
  * cards integration,
  * Mouse interactions with cards,
- * Cards operations (rotation),
+ * Cards operations when folded (rotation),
+ * 
