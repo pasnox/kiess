@@ -7,4 +7,7 @@ Game View description.
 
 = Details =
 
-The Game View will consist of QGraphicsView / QGraphicsScene
+The Game View will consist of QGraphicsView / QGraphicsScene parts
+
+= Purpose =
+ * Mouse interactions with objects (cards)
