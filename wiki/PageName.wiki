@@ -1,0 +1,10 @@
+#summary Game View
+
+= Introduction =
+
+Game View description.
+
+
+= Details =
+
+The Game View will consist of QGraphicsView / QGraphicsScene
