@@ -10,8 +10,9 @@ Game View description.
 The Game View will consist of QGraphicsView / QGraphicsScene parts
 
 = Purpose =
- * set display,
- * cards integration,
+ * Set display,
+ * Cards display,
+ * Cards integration,
  * Mouse interactions with cards,
  * Cards operations when folded (rotation),
  * 
