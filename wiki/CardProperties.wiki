@@ -1,0 +1,12 @@
+#summary Card properties
+
+= Introduction =
+
+Describe all properties/attributes of the cards
+
+
+= Details =
+
+  * Hair
+  * Eyes
+  * 
