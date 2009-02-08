@@ -9,4 +9,7 @@ Describe all properties/attributes of the cards
 
   * Hair
   * Eyes
-  * 
+  * Skin
+  * Sex
+  * mustache, beard
+  * Things (glasses, watch, hat, ... )
