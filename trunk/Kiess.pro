@@ -17,6 +17,7 @@
 XUPProjectSettings {
 	EDITOR	= QMake
 	QT_VERSION	= Qt System (4.4.3)
+	EXECUTE_DEBUG	= bin/Kiess_debug
 }
 
 TEMPLATE	= app
@@ -48,10 +49,15 @@ CONFIG(debug, debug|release) {
 }
 
 HEADERS	= src/network/kiessxmpp.h \
-	src/network/kiessxmppmechanism.h
+	src/network/kiessxmppmechanism.h \
+	src/gui/kPanel.h \
+	src/gui/kPanelItem.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
-	src/network/kiessxmppmechanism.cpp
+	src/network/kiessxmppmechanism.cpp \
+	src/gui/kPanel.cpp \
+	src/gui/kPanelItem.cpp
 
-QT	= core gui network
+QT	= core gui network opengl
+RESOURCES	= src/resources/resources.qrc
