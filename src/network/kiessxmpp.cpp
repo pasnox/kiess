@@ -26,10 +26,29 @@ void KiessXmpp::sendAuth(void) {
 	}
 }
 
+void KiessXmpp::startStream(void) {
+	reader->setDevice(socket);
+	socket->write("<stream:stream to='localhost' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
+}
+
+void KiessXmpp::resourceBinding(void) {
+	if (! jid.isEmpty()) return;
+
+	socket->write("<iq type='set' id='bind_1'>");
+	socket->write("<bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>");
+	socket->write("</iq>");
+}
+
+void KiessXmpp::startSession(void) {
+	socket->write("<iq to='localhost' type='set' id='sess_1'>");
+	socket->write("<session xmlns='urn:ietf:params:xml:ns:xmpp-session'/>");
+	socket->write("</iq>");
+	socket->write("<presence/>");
+}
+
 void KiessXmpp::process(void) {
 	socket->connectToHost("localhost", 5222);
 }
-
 
 void KiessXmpp::onConnected(void) {
 	socket->write("<stream:stream to='localhost' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
@@ -52,14 +71,25 @@ void KiessXmpp::onReadyRead(void) {
 						mechanisms.append(reader->readElementText());
 					} else if (elem == "challenge") {
 						QString response = mechanism->response(reader->readElementText());
+						socket->write(response.toAscii());
+					} else if (elem == "success") {
+						startStream();
+					} else if (elem == "jid") {
+						jid = reader->readElementText();
+						qWarning() << "jid = " << jid;
+						if (sessionPending) startSession();
+					} else if (elem == "session") {
+						sessionPending = true;
 					}
 				}
 				break;
 			case QXmlStreamReader::EndElement:
 				{
 					QStringRef elem = reader->name();
-					if (elem == "features") {
+					if (elem == "mechanisms") {
 						sendAuth();
+					} else if (elem == "bind") {
+						resourceBinding();
 					}
 				}
 			default:

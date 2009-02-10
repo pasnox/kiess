@@ -13,8 +13,13 @@ private:
 	QVector<QString> mechanisms;
 	QTcpSocket * socket;
 	KiessXmppMechanism * mechanism;
+	QString jid;
+	bool sessionPending;
 
 	void sendAuth(void);
+	void startStream(void);
+	void resourceBinding(void);
+	void startSession(void);
 public:
 	KiessXmpp();
 	void process(void);
