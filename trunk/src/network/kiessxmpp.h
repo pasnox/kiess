@@ -15,19 +15,25 @@ private:
 	KiessXmppMechanism * mechanism;
 	QString jid;
 	bool sessionPending;
+	const kXmppSettings& mSettings;
+	QString body;
 
 	void sendAuth(void);
 	void startStream(void);
 	void resourceBinding(void);
 	void startSession(void);
+
 public:
-	KiessXmpp();
+	KiessXmpp(const kXmppSettings& settings);
 	void process(void);
 
 protected slots:
 	void onConnected(void);
 	void onError(QAbstractSocket::SocketError socketError);
 	void onReadyRead(void);
+
+signals:
+	void message(const QString& body);
 };
 
 #endif
