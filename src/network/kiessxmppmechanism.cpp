@@ -2,52 +2,66 @@
 
 #include <QCryptographicHash>
 
-KiessXmppMechanism * KiessXmppMechanism::factory(const QString& mechanism) {
+KiessXmppMechanism::KiessXmppMechanism(const kXmppSettings& settings) : mSettings(settings) {
+}
+
+KiessXmppMechanism * KiessXmppMechanism::factory(const QString& mechanism, const kXmppSettings& settings) {
 	if (mechanism == "DIGEST-MD5") {
-		return new KiessXmppDigestMd5Mechanism();
+		return new KiessXmppDigestMd5Mechanism(settings);
 	}
 
 	return NULL;
 }
 
-KiessXmppDigestMd5Mechanism::KiessXmppDigestMd5Mechanism() {
+KiessXmppDigestMd5Mechanism::KiessXmppDigestMd5Mechanism(const kXmppSettings& settings) : KiessXmppMechanism(settings) {
 	cnonce = "OA6MHXh6VqTrRk";
 }
 
 QByteArray KiessXmppDigestMd5Mechanism::authResponse(void) {
 	QCryptographicHash md5(QCryptographicHash::Md5);
 
-	QByteArray xs("guillaume:localhost:pouet");
+	QByteArray xs;
+	xs.append(mSettings.getUser()).append(':')
+	  .append(mSettings.getHost()).append(':')
+	  .append(mSettings.getPassword());
 	md5.addData(xs);
 	QByteArray x = md5.result();
 	md5.reset();
 
 	QByteArray ha1s(x);
-	ha1s.append(':').append(parts["nonce"]).append(':').append(cnonce).append(':').append("guillaume@localhost/Home");
+	ha1s.append(':').append(parts["nonce"]).append(':').append(cnonce).append(':').append(mSettings.getAuthzid());
 	md5.addData(ha1s);
 	QByteArray ha1 = md5.result().toHex();
 	md5.reset();
 
-	QByteArray ha2s("AUTHENTICATE:xmpp/localhost");
+	QByteArray ha2s("AUTHENTICATE:xmpp/");
+	ha2s.append(mSettings.getHost());
 	md5.addData(ha2s);
 	QByteArray ha2 = md5.result().toHex();
 	md5.reset();
 
 	QByteArray fulls;
-	fulls.append(ha1).append(":").append(parts["nonce"]).append(":").append("00000001")
-		.append(":").append(cnonce).append(':').append(parts["qop"]).append(':').append(ha2);
+	fulls.append(ha1).append(":")
+	     .append(parts["nonce"]).append(":")
+	     .append("00000001") .append(":")
+	     .append(cnonce).append(':')
+	     .append(parts["qop"]).append(':')
+	     .append(ha2);
 	md5.addData(fulls);
 	QByteArray full = md5.result().toHex();
 	md5.reset();
 
 	QByteArray resp;
-	resp.append("username=\"guillaume\",realm=\"localhost\"");
+	resp.append("username=\"").append(mSettings.getUser()).append('"');
+	resp.append(",realm=\"").append(mSettings.getHost()).append('"');
 	resp.append(",nonce=\"").append(parts["nonce"]).append('"');
 	resp.append(",cnonce=").append('"').append(cnonce).append('"');
-	resp.append(",nc=00000001,qop=auth,digest-uri=\"xmpp/localhost\"");
+	resp.append(",nc=00000001");
+	resp.append(",qop=").append(parts["qop"]);
+	resp.append(",digest-uri=\"xmpp/").append(mSettings.getHost()).append('"');
 	resp.append(",response=").append(full);
 	resp.append(",charset=utf-8");
-	resp.append(",authzid=\"guillaume@localhost/Home\"");
+	resp.append(",authzid=\"").append(mSettings.getAuthzid()).append('"');
 
 	QByteArray ret("<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>");
 	ret.append(resp.toBase64());

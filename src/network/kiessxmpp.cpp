@@ -1,6 +1,6 @@
 #include "kiessxmpp.h"
 
-KiessXmpp::KiessXmpp() {
+KiessXmpp::KiessXmpp(const kXmppSettings& settings) : mSettings(settings) {
 	socket = new QTcpSocket(this);
 	reader = new QXmlStreamReader(socket);
 	mechanism = NULL;
@@ -15,7 +15,7 @@ KiessXmpp::KiessXmpp() {
 void KiessXmpp::sendAuth(void) {
 	int i = 0;
 	while((mechanism == NULL) && (i < mechanisms.size())) {
-		mechanism = KiessXmppMechanism::factory(mechanisms.at(i));
+		mechanism = KiessXmppMechanism::factory(mechanisms.at(i), mSettings);
 		i++;
 	}
 
@@ -28,7 +28,9 @@ void KiessXmpp::sendAuth(void) {
 
 void KiessXmpp::startStream(void) {
 	reader->setDevice(socket);
-	socket->write("<stream:stream to='localhost' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
+	socket->write("<stream:stream to='");
+	socket->write(mSettings.getAsciiHost());
+	socket->write("' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
 }
 
 void KiessXmpp::resourceBinding(void) {
@@ -40,18 +42,22 @@ void KiessXmpp::resourceBinding(void) {
 }
 
 void KiessXmpp::startSession(void) {
-	socket->write("<iq to='localhost' type='set' id='sess_1'>");
+	socket->write("<iq to='");
+	socket->write(mSettings.getAsciiHost());
+	socket->write("' type='set' id='sess_1'>");
 	socket->write("<session xmlns='urn:ietf:params:xml:ns:xmpp-session'/>");
 	socket->write("</iq>");
 	socket->write("<presence/>");
 }
 
 void KiessXmpp::process(void) {
-	socket->connectToHost("localhost", 5222);
+	socket->connectToHost(mSettings.getAsciiHost(), 5222);
 }
 
 void KiessXmpp::onConnected(void) {
-	socket->write("<stream:stream to='localhost' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
+	socket->write("<stream:stream to='");
+	socket->write(mSettings.getAsciiHost());
+	socket->write("' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
 }
 
 void KiessXmpp::onError(QAbstractSocket::SocketError socketError) {
@@ -76,10 +82,11 @@ void KiessXmpp::onReadyRead(void) {
 						startStream();
 					} else if (elem == "jid") {
 						jid = reader->readElementText();
-						qWarning() << "jid = " << jid;
 						if (sessionPending) startSession();
 					} else if (elem == "session") {
 						sessionPending = true;
+					} else if (elem == "body") {
+						body = reader->readElementText();
 					}
 				}
 				break;
@@ -90,6 +97,8 @@ void KiessXmpp::onReadyRead(void) {
 						sendAuth();
 					} else if (elem == "bind") {
 						resourceBinding();
+					} else if (elem == "message") {
+						emit message(body);
 					}
 				}
 			default:

@@ -4,9 +4,14 @@
 #include <QString>
 #include <QMap>
 
+#include "kXmppSettings.h"
+
 class KiessXmppMechanism {
+protected:
+	const kXmppSettings& mSettings;
 public:
-	static KiessXmppMechanism * factory(const QString& mechanism);
+	KiessXmppMechanism(const kXmppSettings& settings);
+	static KiessXmppMechanism * factory(const QString& mechanism, const kXmppSettings& settings);
 	virtual QByteArray response(const QString& challenge) = 0;
 };
 
@@ -17,7 +22,7 @@ private:
 
 	QByteArray authResponse(void);
 public:
-	KiessXmppDigestMd5Mechanism();
+	KiessXmppDigestMd5Mechanism(const kXmppSettings& settings);
 	QByteArray response(const QString& challenge);
 };
 
