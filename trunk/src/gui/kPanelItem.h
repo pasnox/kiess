@@ -16,26 +16,26 @@ public:
 	virtual ~kPanelItem();
 	
 	virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* options, QWidget* widget );
-    virtual QRectF boundingRect() const;
+	virtual QRectF boundingRect() const;
 
-    void setPixmap( const QPixmap& pixmap );
+	void setPixmap( const QPixmap& pixmap );
 
-    qreal opacity() const;
-    void setOpacity( qreal opacity );
+	qreal opacity() const;
+	void setOpacity( qreal opacity );
 
 protected:
 	QBrush mBrush;
-    QPixmap mPixmap;
-    QTimeLine mTimeLine;
-    qreal mLastVal;
-    qreal mOpacity;
+	QPixmap mPixmap;
+	QTimeLine mTimeLine;
+	qreal mLastVal;
+	qreal mOpacity;
 	QGraphicsProxyWidget* mProxyWidget;
 	
 	void keyPressEvent( QKeyEvent* event );
-    void keyReleaseEvent( QKeyEvent* event );
+	void keyReleaseEvent( QKeyEvent* event );
 
 private slots:
-    void updateValue( qreal value );
+	void updateValue( qreal value );
 
 signals:
 	void activated();

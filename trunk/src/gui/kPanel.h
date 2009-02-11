@@ -16,40 +16,39 @@ public:
 	virtual ~kPanel();
 	
 	virtual QSize sizeHint() const;
+	bool canFlip() const;
+	bool canMove() const;
+	bool isKeyPad( QKeyEvent* event ) const;
 
 protected:
-    void keyPressEvent( QKeyEvent* event );
-    void resizeEvent( QResizeEvent* event );
-
-private:
-    QGraphicsScene* mScene;
+	QGraphicsScene* mScene;
 	kPanelItem* mContainerItem;
 	kPanelItem* mBackItem;
 	kPanelItem* mSelectionItem;
 	QSize mGridSize;
 	QMap<int, QMap<int, kPanelItem*> > mItems;
+	int mSelectedX, mSelectedY;
+	QTimeLine* mSelectionTimeLine;
+	QTimeLine* mFlipTimeLine;
+	QPointF mSelectionStart;
+	QPointF mSelectionEnd;
+	qreal mContainerRotationX, mContainerRotationY;
+	bool mFlipped;
+	bool mFlipLeft;
 	
-    
-    QGraphicsWidget *splash;
-    QTimeLine *selectionTimeLine;
-    QTimeLine *flipTimeLine;
-    int selectedX, selectedY;
-    
-    QPointF startPos;
-    QPointF endPos;
-    qreal xrot, yrot;
-    qreal xrot2, yrot2;
-
-    bool flipped;
-    bool flipLeft;
+	void keyPressEvent( QKeyEvent* event );
+	void resizeEvent( QResizeEvent* event );
 	
 	QPointF posForLocation( int x, int y ) const;
 	void setCurrentItem( int x, int y, bool animate );
 
-private slots:
-    void updateSelectionStep(qreal val);
-    void updateFlipStep(qreal val);
-    void flip();
+protected slots:
+	void updateSelectionStep( qreal val );
+	void updateFlipStep( qreal val );
+	void flip();
+
+private:
+	QGraphicsWidget *splash;
 };
 
 #endif // KPANEL_H

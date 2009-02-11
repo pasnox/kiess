@@ -5,13 +5,15 @@
 #include <QtOpenGL>
 #endif
 
+const int mFactor = 150;
+
 kPanel::kPanel( QWidget* parent )
 	: QGraphicsView( parent ),
 	mGridSize( 2, 2 ),
-	selectedX(0),
-	selectedY(0),
-	flipped(false),
-	flipLeft(true)
+	mSelectedX( 0 ),
+	mSelectedY( 0 ),
+	mFlipped( false ),
+	mFlipLeft( true )
 {
 	setFrameStyle( QFrame::NoFrame );
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -25,7 +27,7 @@ kPanel::kPanel( QWidget* parent )
 #endif
 
 	// area bound
-	QRectF bounds( ( -mGridSize.width() /2.0 ) *150, ( -mGridSize.height() /2.0 ) *150, mGridSize.width() *150, mGridSize.height() *150 );
+	QRectF bounds( ( -mGridSize.width() /2.0 ) *mFactor, ( -mGridSize.height() /2.0 ) *mFactor, mGridSize.width() *mFactor, mGridSize.height() *mFactor );
 
 	// scene
 	mScene = new QGraphicsScene( bounds, this );
@@ -83,36 +85,30 @@ kPanel::kPanel( QWidget* parent )
 	aboutItem->setPixmap( QPixmap( ":/gui/about.png" ) );
 	mItems[ 1 ][ 1 ] = aboutItem;
 	connect( aboutItem, SIGNAL( activated() ), this, SLOT( flip() ) );
+	
+	// time lines animation
+	mSelectionTimeLine = new QTimeLine( 250, this );
+	mFlipTimeLine = new QTimeLine( 500, this );
+	
+	// connections
+	connect( mBackItem, SIGNAL( activated() ), this, SLOT( flip() ) );
+	connect( mSelectionTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateSelectionStep( qreal ) ) );
+	connect( mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateFlipStep( qreal ) ) );
 
 	// default item and selection
 	setCurrentItem( 0, 0, false );
-
-	
-	
-	
-	
-
-    selectionTimeLine = new QTimeLine(150, this);
-    flipTimeLine = new QTimeLine(500, this);
-
-    connect(mBackItem, SIGNAL(activated()),
-            this, SLOT(flip()));
-    connect(selectionTimeLine, SIGNAL(valueChanged(qreal)),
-            this, SLOT(updateSelectionStep(qreal)));
-    connect(flipTimeLine, SIGNAL(valueChanged(qreal)),
-            this, SLOT(updateFlipStep(qreal)));
 	
 	splash = 0;
 /*
-    splash = new SplashItem;
-    splash->setZValue(5);
-    splash->setPos(-splash->rect().width() / 2, mScene->sceneRect().top());
-    mScene->addItem(splash);
+	splash = new SplashItem;
+	splash->setZValue(5);
+	splash->setPos(-splash->rect().width() / 2, mScene->sceneRect().top());
+	mScene->addItem(splash);
 
-    splash->grabKeyboard();
+	splash->grabKeyboard();
 	*/
-    
-    updateSelectionStep(0);
+	
+	updateSelectionStep( 0 );
 }
 
 kPanel::~kPanel()
@@ -132,95 +128,127 @@ QSize kPanel::sizeHint() const
 {
 	return QSize( 640, 480 );
 }
-    
-void kPanel::keyPressEvent(QKeyEvent *event)
-{
-    if ( ( splash && splash->isVisible() ) || event->key() == Qt::Key_Return || flipped) {
-        QGraphicsView::keyPressEvent(event);
-        return;
-    }
 
-    selectedX = (selectedX + mGridSize.width() + (event->key() == Qt::Key_Right) - (event->key() == Qt::Key_Left)) % mGridSize.width();
-    selectedY = (selectedY + mGridSize.height() + (event->key() == Qt::Key_Down) - (event->key() == Qt::Key_Up)) % mGridSize.height();
+bool kPanel::canFlip() const
+{
+	return mSelectionTimeLine->state() != QTimeLine::Running && mFlipTimeLine->state() != QTimeLine::Running;
+}
+
+bool kPanel::canMove() const
+{
+	return mSelectionTimeLine->state() != QTimeLine::Running;
+}
+
+bool kPanel::isKeyPad( QKeyEvent* event ) const
+{
+	return event->key() == Qt::Key_Right || event->key() == Qt::Key_Left || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down;
+}
 	
-	setCurrentItem( selectedX, selectedY, true );
+void kPanel::keyPressEvent( QKeyEvent* event )
+{	
+	if ( !canMove() || !isKeyPad( event ) || mFlipped )
+	{
+		QGraphicsView::keyPressEvent( event );
+		return;
+	}
+
+	mSelectedX = ( mSelectedX +mGridSize.width() +( event->key() == Qt::Key_Right ) -( event->key() == Qt::Key_Left ) ) %mGridSize.width();
+	mSelectedY = ( mSelectedY +mGridSize.height() +( event->key() == Qt::Key_Down ) -( event->key() == Qt::Key_Up ) ) %mGridSize.height();
+	
+	setCurrentItem( mSelectedX, mSelectedY, true );
 }
 
-void kPanel::resizeEvent(QResizeEvent *event)
+void kPanel::resizeEvent( QResizeEvent* event )
 {
-    QGraphicsView::resizeEvent(event);
-    fitInView(mScene->sceneRect(), Qt::KeepAspectRatio);
-}
-
-void kPanel::updateSelectionStep(qreal val)
-{
-    QPointF newPos(startPos.x() + (endPos - startPos).x() * val,
-                   startPos.y() + (endPos - startPos).y() * val);
-    mSelectionItem->setPos(newPos);
-    
-    QTransform transform;
-    yrot = newPos.x() / 6.0;
-    xrot = newPos.y() / 6.0;
-    transform.rotate(newPos.x() / 6.0, Qt::YAxis);
-    transform.rotate(newPos.y() / 6.0, Qt::XAxis);
-    mContainerItem->setTransform(transform);
-}
-
-void kPanel::updateFlipStep(qreal val)
-{
-    qreal finalxrot = xrot - xrot * val;
-    qreal finalyrot;
-    if (flipLeft)
-        finalyrot = yrot - yrot * val - 180 * val;
-    else
-        finalyrot = yrot - yrot * val + 180 * val;
-    QTransform transform;
-    transform.rotate(finalyrot, Qt::YAxis);
-    transform.rotate(finalxrot, Qt::XAxis);
-    qreal scale = 1 - sin(3.14 * val) * 0.3;
-    transform.scale(scale, scale);
-    mContainerItem->setTransform(transform);
-    if (val == 0)
-		mItems[ selectedX ][ selectedY ]->setFocus();
-}
-
-void kPanel::flip()
-{
-    if (flipTimeLine->state() == QTimeLine::Running)
-        return;
-
-    if (flipTimeLine->currentValue() == 0) {
-        flipTimeLine->setDirection(QTimeLine::Forward);
-        flipTimeLine->start();
-        flipped = true;
-        flipLeft = mSelectionItem->pos().x() < 0;
-    } else {
-        flipTimeLine->setDirection(QTimeLine::Backward);
-        flipTimeLine->start();
-        flipped = false;
-    }
+	QGraphicsView::resizeEvent( event );
+	fitInView( mScene->sceneRect(), Qt::KeepAspectRatio );
 }
 
 QPointF kPanel::posForLocation(int x, int y) const
 {
-    return QPointF(x * 150, y * 150)
-        - QPointF((mGridSize.width() - 1) * 75, (mGridSize.height() - 1) * 75);
+	return QPointF( x *mFactor, y *mFactor ) -QPointF( ( mGridSize.width() -1 ) *( mFactor /2 ), ( mGridSize.height() -1 ) *( mFactor /2 ) );
 }
 
 void kPanel::setCurrentItem( int x, int y, bool animate )
 {
+	if ( !canMove() )
+	{
+		return;
+	}
+	
 	mItems[ x ][ y ]->setFocus();
 	
 	if ( animate )
 	{
-		selectionTimeLine->stop();
-		startPos = mSelectionItem->pos();
-		endPos = posForLocation( x, y );
-		selectionTimeLine->start();
+		mSelectionStart = mSelectionItem->pos();
+		mSelectionEnd = posForLocation( x, y );
+		mSelectionTimeLine->start();
 	}
 	else
 	{
 		mSelectionItem->setPos( posForLocation( x, y ) );
-		startPos = mSelectionItem->pos();
+		mSelectionStart = mSelectionItem->pos();
+	}
+}
+
+void kPanel::updateSelectionStep( qreal val )
+{
+	QPointF newPos( mSelectionStart.x() +( mSelectionEnd -mSelectionStart ).x() *val, mSelectionStart.y() +( mSelectionEnd -mSelectionStart ).y() *val );
+	mSelectionItem->setPos( newPos );
+
+	QTransform transform;
+	mContainerRotationY = newPos.x() /6.0;
+	mContainerRotationX = newPos.y() /6.0;
+	transform.rotate( newPos.x() /6.0, Qt::YAxis );
+	transform.rotate( newPos.y() /6.0, Qt::XAxis );
+	mContainerItem->setTransform( transform );
+}
+
+void kPanel::updateFlipStep( qreal val )
+{
+	qreal finalxrot = mContainerRotationX -mContainerRotationX *val;
+	qreal finalyrot;
+	
+	if ( mFlipLeft )
+	{
+		finalyrot = mContainerRotationY -mContainerRotationY *val -180 *val;
+	}
+	else
+	{
+		finalyrot = mContainerRotationY -mContainerRotationY *val +180 *val;
+	}
+	
+	QTransform transform;
+	transform.rotate( finalyrot, Qt::YAxis );
+	transform.rotate( finalxrot, Qt::XAxis );
+	qreal scale = 1 -sin( M_PI *val ) *0.6;
+	transform.scale( scale, scale );
+	mContainerItem->setTransform( transform );
+	
+	if ( val == 0 )
+	{
+		mItems[ mSelectedX ][ mSelectedY ]->setFocus();
+	}
+}
+
+void kPanel::flip()
+{
+	if ( !canFlip() )
+	{
+		return;
+	}
+
+	if ( mFlipTimeLine->currentValue() == 0 )
+	{
+		mFlipped = true;
+		mFlipLeft = mSelectionItem->pos().x() < 0;
+		mFlipTimeLine->setDirection( QTimeLine::Forward );
+		mFlipTimeLine->start();
+	}
+	else
+	{
+		mFlipped = false;
+		mFlipTimeLine->setDirection( QTimeLine::Backward );
+		mFlipTimeLine->start();
 	}
 }
