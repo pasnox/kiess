@@ -22,7 +22,7 @@ QByteArray KiessXmppDigestMd5Mechanism::authResponse(void) {
 
 	QByteArray xs;
 	xs.append(mSettings.getUser()).append(':')
-	  .append(mSettings.getHost()).append(':')
+	  .append(mSettings.getRealm()).append(':')
 	  .append(mSettings.getPassword());
 	md5.addData(xs);
 	QByteArray x = md5.result();
@@ -35,7 +35,7 @@ QByteArray KiessXmppDigestMd5Mechanism::authResponse(void) {
 	md5.reset();
 
 	QByteArray ha2s("AUTHENTICATE:xmpp/");
-	ha2s.append(mSettings.getHost());
+	ha2s.append(mSettings.getRealm());
 	md5.addData(ha2s);
 	QByteArray ha2 = md5.result().toHex();
 	md5.reset();
@@ -53,12 +53,12 @@ QByteArray KiessXmppDigestMd5Mechanism::authResponse(void) {
 
 	QByteArray resp;
 	resp.append("username=\"").append(mSettings.getUser()).append('"');
-	resp.append(",realm=\"").append(mSettings.getHost()).append('"');
+	resp.append(",realm=\"").append(mSettings.getRealm()).append('"');
 	resp.append(",nonce=\"").append(parts["nonce"]).append('"');
 	resp.append(",cnonce=").append('"').append(cnonce).append('"');
 	resp.append(",nc=00000001");
 	resp.append(",qop=").append(parts["qop"]);
-	resp.append(",digest-uri=\"xmpp/").append(mSettings.getHost()).append('"');
+	resp.append(",digest-uri=\"xmpp/").append(mSettings.getRealm()).append('"');
 	resp.append(",response=").append(full);
 	resp.append(",charset=utf-8");
 	resp.append(",authzid=\"").append(mSettings.getAuthzid()).append('"');
