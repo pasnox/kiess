@@ -1,25 +1,20 @@
 #include "kPanelItem.h"
+#include <kEmbeddedWidget.h>
 
 #include <QGraphicsProxyWidget>
 #include <QPainter>
+#include <QWidget>
 
-kPanelItem::kPanelItem( const QRectF& rect, const QBrush& brush, QWidget* embeddedWidget )
+kPanelItem::kPanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget )
 	: QObject( 0 ), QGraphicsRectItem( rect ),
 	mBrush( brush ),
-	mTimeLine( 75 ),
+	mTimeLine( 75, this ),
 	mLastVal( 0 ),
 	mOpacity( 1 ),
+	mEmbeddedWidget( embeddedWidget ),
 	mProxyWidget( 0 )
 {
 	connect( &mTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateValue( qreal ) ) );
-	
-	if ( embeddedWidget )
-	{
-		mProxyWidget = new QGraphicsProxyWidget( this );
-		mProxyWidget->setFocusPolicy( Qt::StrongFocus );
-		mProxyWidget->setWidget( embeddedWidget );
-		mProxyWidget->setGeometry( boundingRect().adjusted( 25, 25, -25, -25 ) );
-	}
 }
 
 kPanelItem::~kPanelItem()
@@ -83,6 +78,38 @@ void kPanelItem::setPixmap(const QPixmap &pixmap)
 		update();
 }
 
+void kPanelItem::setWidget( kEmbeddedWidget* widget )
+{
+	if ( widget != mEmbeddedWidget )
+	{
+		mEmbeddedWidget = widget;
+		
+		if ( !mEmbeddedWidget )
+		{
+			if ( mProxyWidget )
+			{
+				mProxyWidget->setWidget( 0 );
+			}
+			
+			return;
+		}
+		
+		if ( !mProxyWidget )
+		{
+			mProxyWidget = new QGraphicsProxyWidget( this );
+			mProxyWidget->setFocusPolicy( Qt::StrongFocus );
+		}
+		
+		mProxyWidget->setWidget( mEmbeddedWidget );
+		mProxyWidget->setGeometry( boundingRect().adjusted( 25, 25, -25, -25 ) );
+	}
+}
+
+kEmbeddedWidget* kPanelItem::widget() const
+{
+	return mEmbeddedWidget;
+}
+
 qreal kPanelItem::opacity() const
 {
 	kPanelItem *parent = parentItem() ? (kPanelItem *)parentItem() : 0;
@@ -106,7 +133,6 @@ void kPanelItem::keyPressEvent(QKeyEvent *event)
 	mTimeLine.stop();
 	mTimeLine.setDirection(QTimeLine::Forward);
 	mTimeLine.start();
-	emit activated();
 }
 
 void kPanelItem::keyReleaseEvent(QKeyEvent *event)
@@ -118,6 +144,8 @@ void kPanelItem::keyReleaseEvent(QKeyEvent *event)
 	mTimeLine.stop();
 	mTimeLine.setDirection(QTimeLine::Backward);
 	mTimeLine.start();
+	
+	emit activated();
 }
 
 void kPanelItem::updateValue(qreal value)
@@ -125,4 +153,9 @@ void kPanelItem::updateValue(qreal value)
 	mLastVal = value;
 	if (!mProxyWidget)
 		setTransform(QTransform().scale(1 - value / 10.0, 1 - value / 10.0));
+	
+	if ( mTimeLine.direction() == QTimeLine::Backward && value == 0 )
+	{
+//		emit activated();
+	}
 }

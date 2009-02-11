@@ -52,14 +52,21 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/network/kiessxmppmechanism.h \
 	src/network/kXmppSettings.h \
 	src/gui/kPanel.h \
-	src/gui/kPanelItem.h
+	src/gui/kPanelItem.h \
+	src/gui/kPropertiesWidget.h \
+	src/gui/kEmbeddedWidget.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
 	src/network/kiessxmppmechanism.cpp \
 	src/network/kXmppSettings.cpp \
 	src/gui/kPanel.cpp \
-	src/gui/kPanelItem.cpp
+	src/gui/kPanelItem.cpp \
+	src/gui/kPropertiesWidget.cpp
 
 QT	= core gui network opengl
 RESOURCES	= src/resources/resources.qrc
+
+FORMS	= src/gui/kPropertiesWidget.ui
+INCLUDEPATH	= src/gui \
+	src/network
