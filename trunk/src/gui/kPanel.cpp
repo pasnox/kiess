@@ -1,5 +1,6 @@
 #include "kPanel.h"
 #include "kPanelItem.h"
+#include "kPropertiesWidget.h"
 
 #ifndef QT_NO_OPENGL
 #include <QtOpenGL>
@@ -38,8 +39,7 @@ kPanel::kPanel( QWidget* parent )
 	mScene->addItem( mContainerItem );
 
 	// widget to show on flip
-	QWidget* embed = new QLabel( "koolio !" );
-	mBackItem = new kPanelItem( bounds, embed->palette().window(), embed );
+	mBackItem = new kPanelItem( bounds, QColor() );
 	mBackItem->setTransform( QTransform().rotate( 180, Qt::YAxis ) );
 	mBackItem->setParentItem( mContainerItem );
 	
@@ -69,7 +69,7 @@ kPanel::kPanel( QWidget* parent )
 	connect( teamItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
 	// properties
-	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ) );
+	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kPropertiesWidget() );
 	propertiesItem->setPos( posForLocation( 0, 1 ) );
 	propertiesItem->setParentItem( mContainerItem );
 	propertiesItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -240,6 +240,12 @@ void kPanel::flip()
 
 	if ( mFlipTimeLine->currentValue() == 0 )
 	{
+		kPanelItem* item = qobject_cast<kPanelItem*>( sender() );
+		qWarning( "item: %i", (quintptr)item );
+		kEmbeddedWidget* widget = item->widget();
+		qWarning( "widget: %i", (quintptr)widget );
+		mBackItem->setWidget( widget );
+		
 		mFlipped = true;
 		mFlipLeft = mSelectionItem->pos().x() < 0;
 		mFlipTimeLine->setDirection( QTimeLine::Forward );

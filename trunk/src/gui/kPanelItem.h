@@ -6,19 +6,23 @@
 #include <QTimeLine>
 
 class QGraphicsProxyWidget;
+class kEmbeddedWidget;
 
 class kPanelItem : public QObject, public QGraphicsRectItem
 {
 	Q_OBJECT
 	
 public:
-	kPanelItem( const QRectF& rect, const QBrush& brush, QWidget* embeddedWidget = 0 );
+	kPanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget = 0 );
 	virtual ~kPanelItem();
 	
 	virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* options, QWidget* widget );
 	virtual QRectF boundingRect() const;
 
 	void setPixmap( const QPixmap& pixmap );
+	
+	void setWidget( kEmbeddedWidget* widget );
+	kEmbeddedWidget* widget() const;
 
 	qreal opacity() const;
 	void setOpacity( qreal opacity );
@@ -29,6 +33,7 @@ protected:
 	QTimeLine mTimeLine;
 	qreal mLastVal;
 	qreal mOpacity;
+	kEmbeddedWidget* mEmbeddedWidget;
 	QGraphicsProxyWidget* mProxyWidget;
 	
 	void keyPressEvent( QKeyEvent* event );
