@@ -15,7 +15,7 @@ private:
 	KiessXmppMechanism * mechanism;
 	QString jid;
 	bool sessionPending;
-	const kXmppSettings& mSettings;
+	const kXmppSettings mSettings;
 	QString body;
 
 	void sendAuth(void);
