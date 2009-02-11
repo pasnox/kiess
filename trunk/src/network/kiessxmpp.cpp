@@ -15,6 +15,7 @@ KiessXmpp::KiessXmpp(const kXmppSettings& settings) : mSettings(settings) {
 void KiessXmpp::sendAuth(void) {
 	int i = 0;
 	while((mechanism == NULL) && (i < mechanisms.size())) {
+		qWarning() << "mecha: " << mechanisms.at(i);
 		mechanism = KiessXmppMechanism::factory(mechanisms.at(i), mSettings);
 		i++;
 	}
@@ -56,7 +57,7 @@ void KiessXmpp::process(void) {
 
 void KiessXmpp::onConnected(void) {
 	socket->write("<stream:stream to='");
-	socket->write(mSettings.getAsciiHost());
+	socket->write(mSettings.getAsciiRealm());
 	socket->write("' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'>");
 }
 

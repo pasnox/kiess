@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
 	// show game panel
 	panel.show();
 
-	kXmppSettings settings("localhost", "guillaume", "Home", "pouet");
+	kXmppSettings settings("localhost", "guillaume", "localhost", "Home", "pouet");
 	KiessXmpp xmpp(settings);
 	xmpp.process();
 

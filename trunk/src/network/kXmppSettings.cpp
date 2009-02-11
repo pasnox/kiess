@@ -3,9 +3,10 @@
 kXmppSettings::kXmppSettings() {
 }
 
-kXmppSettings::kXmppSettings(const QString& host, const QString& user, const QString& resource, const QString& pass) :
+kXmppSettings::kXmppSettings(const QString& host, const QString& user, const QString& realm, const QString& resource, const QString& pass) :
 		mHost(host),
 		mUser(user),
+		mRealm(realm),
 		mResource(resource),
 		mPassword(pass) {
 }
@@ -16,6 +17,10 @@ void kXmppSettings::setHost(const QString& host) {
 
 void kXmppSettings::setUser(const QString& user) {
 	mUser = user;
+}
+
+void kXmppSettings::setRealm(const QString& realm) {
+	mRealm = realm;
 }
 
 void kXmppSettings::setResource(const QString& resource) {
@@ -38,6 +43,14 @@ const QString kXmppSettings::getUser() const {
 	return mUser;
 }
 
+const QString kXmppSettings::getRealm() const {
+	return mRealm;
+}
+
+const QByteArray kXmppSettings::getAsciiRealm() const {
+	return mRealm.toAscii();
+}
+
 const QString kXmppSettings::getResource() const {
 	return mResource;
 }
@@ -48,6 +61,6 @@ const QString kXmppSettings::getPassword() const {
 
 const QString kXmppSettings::getAuthzid() const {
 	QString authzid;
-	authzid.append(mUser).append('@').append(mHost).append('/').append(mResource);
+	authzid.append(mUser).append('@').append(mRealm).append('/').append(mResource);
 	return authzid;
 }
