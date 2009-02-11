@@ -100,6 +100,7 @@ void kPanelItem::setWidget( kEmbeddedWidget* widget )
 			mProxyWidget->setFocusPolicy( Qt::StrongFocus );
 		}
 		
+		mBrush = mEmbeddedWidget->palette().window();
 		mProxyWidget->setWidget( mEmbeddedWidget );
 		mProxyWidget->setGeometry( boundingRect().adjusted( 25, 25, -25, -25 ) );
 	}
