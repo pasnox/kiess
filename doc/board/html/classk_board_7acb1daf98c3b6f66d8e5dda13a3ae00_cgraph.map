@@ -1,6 +1,0 @@
-<area shape="rect" href="$classk_board.html#4e10c45df5abc5c38e1eaed7ce9be852" title="Create all items (Board and cards." alt="" coords="191,31,329,57">
-<area shape="rect" href="$classk_board.html#61ed1d8d3e33d12e9eb8fb13735d508c" title="Create environment." alt="" coords="188,81,332,108">
-<area shape="rect" href="$classk_board.html#2d20595903256d30c09cdd9b828551e8" title="Initailization of the board." alt="" coords="167,132,353,159">
-<area shape="rect" href="$classk_board.html#0c56281034a2f3d2f2c69eb85468067b" title="kBoard::posForLocation" alt="" coords="608,5,768,32">
-<area shape="rect" href="$classk_board.html#b7f04b679501a543e031180a6dc3e199" title="Move the _mSelectionItem to the selected cardItem." alt="" coords="404,31,559,57">
-<area shape="rect" href="$classk_card_item.html#7b4003380b3b2fd5e9ae091394204b4b" title="Set the cardItem pixmap." alt="" coords="407,81,556,108">
