@@ -38,7 +38,7 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/debug/.ui
 	MOC_DIR	= $${BUILD_PATH}/debug/.moc
 	RCC_DIR	= $${BUILD_PATH}/debug/.rcc
-	win32:DEFINES += _USE_MATH_DEFINES
+	win32-msvc*:DEFINES += _USE_MATH_DEFINES
 } else {
 	#Release
 	unix:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/unix
@@ -47,7 +47,7 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/release/.ui
 	MOC_DIR	= $${BUILD_PATH}/release/.moc
 	RCC_DIR	= $${BUILD_PATH}/release/.rcc
-	win32:DEFINES += _USE_MATH_DEFINES
+	win32-msvc*:DEFINES += _USE_MATH_DEFINES
 }
 
 HEADERS	= src/network/kiessxmpp.h \
