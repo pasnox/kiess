@@ -1,10 +1,14 @@
 <RCC>
-  <qresource prefix="gui" >
-    <file alias="about.png" >gui/about.png</file>
-    <file alias="background.jpg" >gui/background.jpg</file>
-    <file alias="credits.png" >gui/credits.png</file>
-    <file alias="properties.png" >gui/properties.png</file>
-    <file alias="single.png" >gui/single.png</file>
-    <file alias="team.png" >gui/team.png</file>
-  </qresource>
+    <qresource prefix="/board" >
+        <file alias="background.jpg" >board/background.jpg</file>
+        <file alias="single.png" >board/single.png</file>
+    </qresource>
+    <qresource prefix="/gui" >
+        <file alias="about.png" >gui/about.png</file>
+        <file alias="background.jpg" >gui/background.jpg</file>
+        <file alias="credits.png" >gui/credits.png</file>
+        <file alias="properties.png" >gui/properties.png</file>
+        <file alias="single.png" >gui/single.png</file>
+        <file alias="team.png" >gui/team.png</file>
+    </qresource>
 </RCC>
