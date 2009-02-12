@@ -38,7 +38,7 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/debug/.ui
 	MOC_DIR	= $${BUILD_PATH}/debug/.moc
 	RCC_DIR	= $${BUILD_PATH}/debug/.rcc
-	win32-msvc*:DEFINES += _USE_MATH_DEFINES
+	win32-msvc*:DEFINES	+= _USE_MATH_DEFINES
 } else {
 	#Release
 	unix:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/unix
@@ -47,7 +47,7 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/release/.ui
 	MOC_DIR	= $${BUILD_PATH}/release/.moc
 	RCC_DIR	= $${BUILD_PATH}/release/.rcc
-	win32-msvc*:DEFINES += _USE_MATH_DEFINES
+	win32-msvc*:DEFINES	+= _USE_MATH_DEFINES
 }
 
 HEADERS	= src/network/kiessxmpp.h \
@@ -58,8 +58,9 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/gui/kPropertiesWidget.h \
 	src/gui/kEmbeddedWidget.h \
 	src/board/kBoard.h \
-	src/board/kCardItem.h
-	
+	src/board/kCardItem.h \
+	src/gui/kSingleWidget.h
+
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
 	src/network/kiessxmppmechanism.cpp \
@@ -68,12 +69,14 @@ SOURCES	= src/main.cpp \
 	src/gui/kPanelItem.cpp \
 	src/gui/kPropertiesWidget.cpp \
 	src/board/kBoard.cpp \
-	src/board/kCardItem.cpp
+	src/board/kCardItem.cpp \
+	src/gui/kSingleWidget.cpp
 
 QT	= core gui network opengl
 RESOURCES	= src/resources/resources.qrc
 
-FORMS	= src/gui/kPropertiesWidget.ui
+FORMS	= src/gui/kPropertiesWidget.ui \
+	src/gui/kSingleWidget.ui
 INCLUDEPATH	= src/gui \
 	src/network \
 	src/board
