@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
+    <width>360</width>
     <height>245</height>
    </rect>
   </property>
@@ -20,53 +20,27 @@
      </property>
      <layout class="QFormLayout" name="formLayout" >
       <item row="0" column="0" >
-       <widget class="QLabel" name="label" >
+       <widget class="QCheckBox" name="checkBox" >
         <property name="text" >
-         <string>Jabber ID</string>
+         <string>Use sound</string>
         </property>
        </widget>
-      </item>
-      <item row="0" column="1" >
-       <widget class="QLineEdit" name="lineEdit" />
       </item>
       <item row="1" column="0" >
-       <widget class="QLabel" name="label_2" >
+       <widget class="QCheckBox" name="checkBox_2" >
         <property name="text" >
-         <string>Password</string>
+         <string>Use animation</string>
         </property>
        </widget>
-      </item>
-      <item row="1" column="1" >
-       <widget class="QLineEdit" name="lineEdit_2" />
       </item>
       <item row="2" column="0" >
-       <widget class="QLabel" name="label_3" >
+       <widget class="QCheckBox" name="checkBox_3" >
         <property name="text" >
-         <string>Host</string>
+         <string>Use fullscreen</string>
         </property>
        </widget>
-      </item>
-      <item row="2" column="1" >
-       <widget class="QLineEdit" name="lineEdit_3" />
-      </item>
-      <item row="3" column="0" >
-       <widget class="QLabel" name="label_4" >
-        <property name="text" >
-         <string>Resource</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" >
-       <widget class="QLineEdit" name="lineEdit_4" />
       </item>
      </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Discard</set>
-     </property>
     </widget>
    </item>
   </layout>
@@ -80,40 +54,7 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>kPropertiesWidget</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>226</x>
-     <y>311</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>220</x>
-     <y>352</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>kPropertiesWidget</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>305</x>
-     <y>315</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>308</x>
-     <y>367</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>accept()</slot>
   <slot>reject()</slot>

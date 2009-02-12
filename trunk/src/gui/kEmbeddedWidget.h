@@ -10,10 +10,6 @@ class kEmbeddedWidget : public QWidget
 public slots:
 	virtual void reject() = 0;
 	virtual void accept() = 0;
-
-signals:
-	void rejected();
-	void accepted();
 };
 
 #endif // KEMBEDDEDWIDGET_H

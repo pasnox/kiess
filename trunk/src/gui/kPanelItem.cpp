@@ -123,10 +123,31 @@ void kPanelItem::setOpacity(qreal opacity)
 	update();
 }
 
-void kPanelItem::keyPressEvent(QKeyEvent *event)
+void kPanelItem::keyPressEvent( QKeyEvent* event )
 {
-	if (event->isAutoRepeat() || event->key() != Qt::Key_Return
+	if (event->isAutoRepeat()
 		|| (mTimeLine.state() == QTimeLine::Running && mTimeLine.direction() == QTimeLine::Forward)) {
+		QGraphicsRectItem::keyPressEvent(event);
+		return;
+	}
+	
+	if ( mEmbeddedWidget && mEmbeddedWidget->isVisible() )
+	{
+		if ( event->key() == Qt::Key_Escape )
+		{
+			mEmbeddedWidget->reject();
+			event->ignore();
+			return;
+		}
+		else if ( event->key() == Qt::Key_Return )
+		{
+			mEmbeddedWidget->accept();
+			event->ignore();
+			return;
+		}
+	}
+	else if ( event->key() != Qt::Key_Return )
+	{
 		QGraphicsRectItem::keyPressEvent(event);
 		return;
 	}
@@ -138,7 +159,7 @@ void kPanelItem::keyPressEvent(QKeyEvent *event)
 
 void kPanelItem::keyReleaseEvent(QKeyEvent *event)
 {
-	if (event->key() != Qt::Key_Return) {
+	if (event->key() != Qt::Key_Return && event->key() != Qt::Key_Escape) {
 		QGraphicsRectItem::keyReleaseEvent(event);
 		return;
 	}
@@ -147,6 +168,7 @@ void kPanelItem::keyReleaseEvent(QKeyEvent *event)
 	mTimeLine.start();
 	
 	emit activated();
+	qWarning( "activated" );
 }
 
 void kPanelItem::updateValue(qreal value)

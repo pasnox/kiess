@@ -1,5 +1,6 @@
 #include "kPanel.h"
 #include "kPanelItem.h"
+#include "kSingleWidget.h"
 #include "kPropertiesWidget.h"
 
 #ifndef QT_NO_OPENGL
@@ -51,7 +52,7 @@ kPanel::kPanel( QWidget* parent )
 	// items
 	
 	// single
-	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ) );
+	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kSingleWidget() );
 	singleItem->setPos( posForLocation( 0, 0 ) );
 	singleItem->setParentItem( mContainerItem );
 	singleItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -241,15 +242,17 @@ void kPanel::flip()
 	if ( mFlipTimeLine->currentValue() == 0 )
 	{
 		kPanelItem* item = qobject_cast<kPanelItem*>( sender() );
-		qWarning( "item: %i", (quintptr)item );
 		kEmbeddedWidget* widget = item->widget();
-		qWarning( "widget: %i", (quintptr)widget );
-		mBackItem->setWidget( widget );
 		
-		mFlipped = true;
-		mFlipLeft = mSelectionItem->pos().x() < 0;
-		mFlipTimeLine->setDirection( QTimeLine::Forward );
-		mFlipTimeLine->start();
+		if ( widget )
+		{
+			mBackItem->setWidget( widget );
+			
+			mFlipped = true;
+			mFlipLeft = mSelectionItem->pos().x() < 0;
+			mFlipTimeLine->setDirection( QTimeLine::Forward );
+			mFlipTimeLine->start();
+		}
 	}
 	else
 	{
