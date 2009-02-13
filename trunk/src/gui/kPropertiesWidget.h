@@ -8,7 +8,7 @@ class kPropertiesWidget : public kEmbeddedWidget, public Ui::kPropertiesWidget
 	Q_OBJECT
 
 public:
-	kPropertiesWidget();
+	kPropertiesWidget( kPanel* panel );
 	virtual ~kPropertiesWidget();
 
 public slots:

@@ -8,7 +8,7 @@ class kSingleWidget : public kEmbeddedWidget, public Ui::kSingleWidget
 	Q_OBJECT
 
 public:
-	kSingleWidget();
+	kSingleWidget( kPanel* panel );
 	virtual ~kSingleWidget();
 
 public slots:

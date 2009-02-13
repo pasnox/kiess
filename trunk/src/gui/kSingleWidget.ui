@@ -5,12 +5,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
+    <width>350</width>
     <height>245</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Properties</string>
+  </property>
+  <property name="frameShape" >
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow" >
+   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
@@ -67,7 +73,7 @@
  <customwidgets>
   <customwidget>
    <class>kEmbeddedWidget</class>
-   <extends>QWidget</extends>
+   <extends>QFrame</extends>
    <header>kEmbeddedWidget.h</header>
    <container>1</container>
   </customwidget>

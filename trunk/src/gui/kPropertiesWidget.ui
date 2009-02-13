@@ -5,36 +5,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
+    <width>350</width>
     <height>245</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Properties</string>
   </property>
+  <property name="frameShape" >
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow" >
+   <enum>QFrame::Raised</enum>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
-    <widget class="QGroupBox" name="groupBox" >
+    <widget class="QGroupBox" name="gbProperties" >
      <property name="title" >
       <string>Properties</string>
      </property>
      <layout class="QFormLayout" name="formLayout" >
+      <property name="fieldGrowthPolicy" >
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
       <item row="0" column="0" >
-       <widget class="QCheckBox" name="checkBox" >
+       <widget class="QCheckBox" name="cbSound" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
         <property name="text" >
          <string>Use sound</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" >
-       <widget class="QCheckBox" name="checkBox_2" >
+       <widget class="QCheckBox" name="cbAnimation" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
         <property name="text" >
          <string>Use animation</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="2" column="0" >
-       <widget class="QCheckBox" name="checkBox_3" >
+       <widget class="QCheckBox" name="cbFullScreen" >
         <property name="text" >
          <string>Use fullscreen</string>
         </property>
@@ -44,11 +62,15 @@
     </widget>
    </item>
   </layout>
+  <zorder>cbSound</zorder>
+  <zorder>cbAnimation</zorder>
+  <zorder>cbFullScreen</zorder>
+  <zorder>gbProperties</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>kEmbeddedWidget</class>
-   <extends>QWidget</extends>
+   <extends>QFrame</extends>
    <header>kEmbeddedWidget.h</header>
    <container>1</container>
   </customwidget>

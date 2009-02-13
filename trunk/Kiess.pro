@@ -59,7 +59,8 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/gui/kEmbeddedWidget.h \
 	src/board/kBoard.h \
 	src/board/kCardItem.h \
-	src/gui/kSingleWidget.h
+	src/gui/kSingleWidget.h \
+	src/gui/kAboutWidget.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -70,13 +71,15 @@ SOURCES	= src/main.cpp \
 	src/gui/kPropertiesWidget.cpp \
 	src/board/kBoard.cpp \
 	src/board/kCardItem.cpp \
-	src/gui/kSingleWidget.cpp
+	src/gui/kSingleWidget.cpp \
+	src/gui/kAboutWidget.cpp
 
 QT	= core gui network opengl
 RESOURCES	= src/resources/resources.qrc
 
 FORMS	= src/gui/kPropertiesWidget.ui \
-	src/gui/kSingleWidget.ui
+	src/gui/kSingleWidget.ui \
+	src/gui/kAboutWidget.ui
 INCLUDEPATH	= src/gui \
 	src/network \
 	src/board
