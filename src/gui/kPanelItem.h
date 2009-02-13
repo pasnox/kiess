@@ -7,6 +7,7 @@
 
 class QGraphicsProxyWidget;
 class kEmbeddedWidget;
+class kPanel;
 
 class kPanelItem : public QObject, public QGraphicsRectItem
 {
@@ -26,11 +27,15 @@ public:
 
 	qreal opacity() const;
 	void setOpacity( qreal opacity );
+	
+	kPanel* panel() const;
+	bool isFlipped() const;
+	bool canMove() const;
 
 protected:
 	QBrush mBrush;
 	QPixmap mPixmap;
-	QTimeLine mTimeLine;
+	QTimeLine mFlipTimeLine;
 	qreal mLastVal;
 	qreal mOpacity;
 	kEmbeddedWidget* mEmbeddedWidget;

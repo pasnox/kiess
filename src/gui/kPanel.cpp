@@ -144,15 +144,20 @@ bool kPanel::isKeyPad( QKeyEvent* event ) const
 {
 	return event->key() == Qt::Key_Right || event->key() == Qt::Key_Left || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down;
 }
+
+bool kPanel::isFlipped() const
+{
+	return mFlipped;
+}
 	
 void kPanel::keyPressEvent( QKeyEvent* event )
-{	
+{
 	if ( !canMove() || !isKeyPad( event ) || mFlipped )
 	{
 		QGraphicsView::keyPressEvent( event );
 		return;
 	}
-
+	
 	mSelectedX = ( mSelectedX +mGridSize.width() +( event->key() == Qt::Key_Right ) -( event->key() == Qt::Key_Left ) ) %mGridSize.width();
 	mSelectedY = ( mSelectedY +mGridSize.height() +( event->key() == Qt::Key_Down ) -( event->key() == Qt::Key_Up ) ) %mGridSize.height();
 	
@@ -246,6 +251,7 @@ void kPanel::flip()
 		
 		if ( widget )
 		{
+			widget->loadDatas();
 			mBackItem->setWidget( widget );
 			
 			mFlipped = true;

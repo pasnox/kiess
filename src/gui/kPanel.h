@@ -19,6 +19,7 @@ public:
 	bool canFlip() const;
 	bool canMove() const;
 	bool isKeyPad( QKeyEvent* event ) const;
+	bool isFlipped() const;
 
 protected:
 	QGraphicsScene* mScene;
