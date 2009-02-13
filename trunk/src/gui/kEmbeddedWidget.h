@@ -8,6 +8,8 @@ class kEmbeddedWidget : public QWidget
 	Q_OBJECT
 
 public slots:
+	virtual void loadDatas() = 0;
+	virtual void saveDatas() = 0;
 	virtual void reject() = 0;
 	virtual void accept() = 0;
 };

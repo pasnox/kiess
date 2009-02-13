@@ -12,6 +12,8 @@ public:
 	virtual ~kPropertiesWidget();
 
 public slots:
+	virtual void loadDatas();
+	virtual void saveDatas();
 	virtual void reject();
 	virtual void accept();
 };

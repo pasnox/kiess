@@ -1,5 +1,6 @@
 #include "kPanelItem.h"
-#include <kEmbeddedWidget.h>
+#include "kEmbeddedWidget.h"
+#include "kPanel.h"
 
 #include <QGraphicsProxyWidget>
 #include <QPainter>
@@ -8,13 +9,13 @@
 kPanelItem::kPanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget )
 	: QObject( 0 ), QGraphicsRectItem( rect ),
 	mBrush( brush ),
-	mTimeLine( 75, this ),
+	mFlipTimeLine( 75, this ),
 	mLastVal( 0 ),
 	mOpacity( 1 ),
 	mEmbeddedWidget( embeddedWidget ),
 	mProxyWidget( 0 )
 {
-	connect( &mTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateValue( qreal ) ) );
+	connect( &mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateValue( qreal ) ) );
 }
 
 kPanelItem::~kPanelItem()
@@ -68,14 +69,17 @@ QRectF kPanelItem::boundingRect() const
 {
 	qreal penW = 0.5;
 	qreal shadowW = 2.0;
-	return rect().adjusted(-penW, -penW, penW + shadowW, penW + shadowW);
+	return rect().adjusted( -penW, -penW, penW +shadowW, penW +shadowW );
 }
 
-void kPanelItem::setPixmap(const QPixmap &pixmap)
+void kPanelItem::setPixmap( const QPixmap& pixmap )
 {
 	mPixmap = pixmap;
-	if (scene() && isVisible())
+	
+	if ( scene() && isVisible() )
+	{
 		update();
+	}
 }
 
 void kPanelItem::setWidget( kEmbeddedWidget* widget )
@@ -113,72 +117,98 @@ kEmbeddedWidget* kPanelItem::widget() const
 
 qreal kPanelItem::opacity() const
 {
-	kPanelItem *parent = parentItem() ? (kPanelItem *)parentItem() : 0;
-	return mOpacity + (parent ? parent->opacity() : 0);
+	kPanelItem* parent = parentItem() ? static_cast<kPanelItem*>( parentItem() ) : 0;
+	return mOpacity +( parent ? parent->opacity() : 0 );
 }
 
-void kPanelItem::setOpacity(qreal opacity)
+void kPanelItem::setOpacity( qreal opacity )
 {
 	mOpacity = opacity;
 	update();
 }
 
-void kPanelItem::keyPressEvent( QKeyEvent* event )
+kPanel* kPanelItem::panel() const
 {
-	if (event->isAutoRepeat()
-		|| (mTimeLine.state() == QTimeLine::Running && mTimeLine.direction() == QTimeLine::Forward)) {
-		QGraphicsRectItem::keyPressEvent(event);
-		return;
+	if ( !scene() )
+	{
+		return 0;
 	}
 	
-	if ( mEmbeddedWidget && mEmbeddedWidget->isVisible() )
+	QList<QGraphicsView*> views = scene()->views();
+	
+	if ( views.isEmpty() )
+	{
+		return 0;
+	}
+	
+	return qobject_cast<kPanel*>( views.first() );
+}
+
+bool kPanelItem::isFlipped() const
+{
+	kPanel* panel = this->panel();
+	return panel ? panel->isFlipped() : false;
+}
+
+bool kPanelItem::canMove() const
+{
+	return mFlipTimeLine.state() != QTimeLine::Running;
+}
+
+void kPanelItem::keyPressEvent( QKeyEvent* event )
+{
+	if ( isFlipped() && canMove() )
 	{
 		if ( event->key() == Qt::Key_Escape )
 		{
 			mEmbeddedWidget->reject();
-			event->ignore();
+			emit activated();
 			return;
 		}
 		else if ( event->key() == Qt::Key_Return )
 		{
 			mEmbeddedWidget->accept();
-			event->ignore();
+			emit activated();
 			return;
 		}
 	}
-	else if ( event->key() != Qt::Key_Return )
+	else if ( event->isAutoRepeat() || !canMove() || event->key() != Qt::Key_Return )
 	{
-		QGraphicsRectItem::keyPressEvent(event);
+		QGraphicsRectItem::keyPressEvent( event );
 		return;
 	}
-
-	mTimeLine.stop();
-	mTimeLine.setDirection(QTimeLine::Forward);
-	mTimeLine.start();
-}
-
-void kPanelItem::keyReleaseEvent(QKeyEvent *event)
-{
-	if (event->key() != Qt::Key_Return && event->key() != Qt::Key_Escape) {
-		QGraphicsRectItem::keyReleaseEvent(event);
-		return;
-	}
-	mTimeLine.stop();
-	mTimeLine.setDirection(QTimeLine::Backward);
-	mTimeLine.start();
 	
-	emit activated();
-	qWarning( "activated" );
+	mFlipTimeLine.setDirection( QTimeLine::Forward );
+	mFlipTimeLine.start();
 }
 
-void kPanelItem::updateValue(qreal value)
+void kPanelItem::keyReleaseEvent( QKeyEvent* event )
+{
+	if ( isFlipped() || event->isAutoRepeat() || event->key() != Qt::Key_Return )
+	{
+		QGraphicsRectItem::keyReleaseEvent( event );
+		return;
+	}
+	
+	if ( mFlipTimeLine.direction() != QTimeLine::Backward )
+	{
+		mFlipTimeLine.stop();
+		mFlipTimeLine.setDirection( QTimeLine::Backward );
+		mFlipTimeLine.start();
+	}
+}
+
+void kPanelItem::updateValue( qreal value )
 {
 	mLastVal = value;
-	if (!mProxyWidget)
-		setTransform(QTransform().scale(1 - value / 10.0, 1 - value / 10.0));
 	
-	if ( mTimeLine.direction() == QTimeLine::Backward && value == 0 )
+	if ( !mProxyWidget )
 	{
-//		emit activated();
+		setTransform( QTransform().scale( 1 -value /10.0, 1 -value /10.0 ) );
+	}
+	
+	if ( mFlipTimeLine.direction() == QTimeLine::Backward && value == 0 && mEmbeddedWidget && !isFlipped() )
+	{
+		emit activated();
 	}
 }
