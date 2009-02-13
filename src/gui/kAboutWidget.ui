@@ -1,0 +1,225 @@
+<ui version="4.0" >
+ <class>kAboutWidget</class>
+ <widget class="kEmbeddedWidget" name="kAboutWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>351</width>
+    <height>245</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Properties</string>
+  </property>
+  <property name="frameShape" >
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow" >
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="margin" >
+    <number>4</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout" >
+     <item rowspan="2" row="0" column="0" >
+      <widget class="QLabel" name="lLogo" >
+       <property name="minimumSize" >
+        <size>
+         <width>64</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>64</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="pixmap" >
+        <pixmap resource="../resources/resources.qrc" >:/gui/credits.png</pixmap>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QLabel" name="lTitle" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Maximum" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Kiess</string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QLabel" name="lVersion" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Maximum" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font" >
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Version 1.0.0</string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="saInformations" >
+     <property name="palette" >
+      <palette>
+       <active>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>255</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="0" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>255</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="0" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="0" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="0" >
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="widgetResizable" >
+      <bool>true</bool>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>337</width>
+        <height>177</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <item>
+        <widget class="QLabel" name="lInformations" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="textFormat" >
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="openExternalLinks" >
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags" >
+          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>kEmbeddedWidget</class>
+   <extends>QFrame</extends>
+   <header>kEmbeddedWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../resources/resources.qrc" />
+ </resources>
+ <connections/>
+ <slots>
+  <slot>accept()</slot>
+  <slot>reject()</slot>
+ </slots>
+</ui>

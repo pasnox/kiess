@@ -20,6 +20,7 @@ public:
 	bool canMove() const;
 	bool isKeyPad( QKeyEvent* event ) const;
 	bool isFlipped() const;
+	void switchFullScreen();
 
 protected:
 	QGraphicsScene* mScene;

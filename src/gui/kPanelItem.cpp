@@ -35,11 +35,11 @@ void kPanelItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
 		return;
 	}
 
-	if (mProxyWidget && !mProxyWidget->isVisible()) {
+	if (mProxyWidget && mProxyWidget->widget() && !mProxyWidget->isVisible()) {
 		mProxyWidget->show();
 		mProxyWidget->setFocus();
 	}
-	if (mProxyWidget && mProxyWidget->pos() != QPoint())
+	if (mProxyWidget && mProxyWidget->widget() && mProxyWidget->pos() != QPoint())
 		mProxyWidget->setGeometry(boundingRect().adjusted(25, 25, -25, -25));
 
 	painter->setOpacity(opacity());
@@ -47,7 +47,7 @@ void kPanelItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
 	painter->setBrush(QColor(0, 0, 0, 64));
 	painter->drawRoundRect(rect().translated(2, 2));
 
-	if (!mProxyWidget) {
+	if (!mProxyWidget || !mProxyWidget->widget() ) {
 		QLinearGradient gradient(rect().topLeft(), rect().bottomRight());
 		const QColor col = mBrush.color();
 		gradient.setColorAt(0, col);

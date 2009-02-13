@@ -2,6 +2,7 @@
 #include "kPanelItem.h"
 #include "kSingleWidget.h"
 #include "kPropertiesWidget.h"
+#include "kAboutWidget.h"
 
 #ifndef QT_NO_OPENGL
 #include <QtOpenGL>
@@ -52,7 +53,7 @@ kPanel::kPanel( QWidget* parent )
 	// items
 	
 	// single
-	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kSingleWidget() );
+	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kSingleWidget( this ) );
 	singleItem->setPos( posForLocation( 0, 0 ) );
 	singleItem->setParentItem( mContainerItem );
 	singleItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -70,7 +71,7 @@ kPanel::kPanel( QWidget* parent )
 	connect( teamItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
 	// properties
-	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kPropertiesWidget() );
+	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kPropertiesWidget( this ) );
 	propertiesItem->setPos( posForLocation( 0, 1 ) );
 	propertiesItem->setParentItem( mContainerItem );
 	propertiesItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -78,8 +79,8 @@ kPanel::kPanel( QWidget* parent )
 	mItems[ 0 ][ 1 ] = propertiesItem;
 	connect( propertiesItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
-	// about²
-	kPanelItem* aboutItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ) );
+	// about
+	kPanelItem* aboutItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kAboutWidget( this ) );
 	aboutItem->setPos( posForLocation( 1, 1 ) );
 	aboutItem->setParentItem( mContainerItem );
 	aboutItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -149,9 +150,26 @@ bool kPanel::isFlipped() const
 {
 	return mFlipped;
 }
+
+void kPanel::switchFullScreen()
+{
+	if ( isFullScreen() )
+	{
+		showNormal();
+	}
+	else
+	{
+		showFullScreen();
+	}
+}
 	
 void kPanel::keyPressEvent( QKeyEvent* event )
 {
+	if ( event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_F )
+	{
+		switchFullScreen();
+	}
+	
 	if ( !canMove() || !isKeyPad( event ) || mFlipped )
 	{
 		QGraphicsView::keyPressEvent( event );
