@@ -25,6 +25,8 @@ QRectF kCardItem::boundingRect() const
 
 void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* options, QWidget* widget )
 {
+	Q_UNUSED(widget);
+	Q_UNUSED(options);
     painter->setOpacity(opacity());
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(0, 0, 0, 64));
@@ -103,5 +105,6 @@ void kCardItem::keyReleaseEvent(QKeyEvent *event)
 
 void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
+	Q_UNUSED(event);
 	emit returnCardItem(this);
 }
