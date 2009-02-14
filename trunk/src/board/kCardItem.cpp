@@ -1,5 +1,7 @@
 #include "kCardItem.h"
 
+#include "math.h"
+
 #include <QGraphicsProxyWidget>
 #include <QPainter>
 
@@ -8,8 +10,11 @@ kCardItem::kCardItem( const QRectF& rect, const QBrush& brush)
 	_mBrush( brush ),
 	_mLastVal( 0 ),
 	_mOpacity( 1 ),
+	_mFlipTimeLine( 500, this ),
 	_mSourcePixmap(QPixmap()) //source pixmap
 {
+	connect( &_mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateValue( qreal ) ) );
+	connect( &_mFlipTimeLine, SIGNAL( finished() ), this, SLOT( finishedRotation( ) ) );
 }
 
 kCardItem::~kCardItem()
@@ -92,7 +97,10 @@ void kCardItem::keyPressEvent(QKeyEvent *event)
         QGraphicsRectItem::keyPressEvent(event);
         return;
     }
-	setPixmap(QPixmap());
+	//animation
+	_mChangePicture = FALSE;
+	_mFlipTimeLine.setDirection( QTimeLine::Forward );
+	_mFlipTimeLine.start();
 }
 
 void kCardItem::keyReleaseEvent(QKeyEvent *event)
@@ -107,4 +115,25 @@ void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
 	Q_UNUSED(event);
 	emit returnCardItem(this);
+}
+
+void kCardItem::updateValue( qreal value )
+{
+	//setTransform( QTransform().scale( 1 -value /10.0, 1 -value /10.0 ) );
+	setTransform( QTransform().rotate((value * 180), Qt::YAxis  ));
+	if (value >= .5 && _mChangePicture == FALSE) {
+		_mChangePicture = TRUE;
+		setPixmap(QPixmap());
+	}
+}
+
+void kCardItem::finishedRotation()
+{
+	//animation
+	if ( _mFlipTimeLine.direction() != QTimeLine::Backward )
+	{
+		_mFlipTimeLine.stop();
+		_mFlipTimeLine.setDirection( QTimeLine::Backward );
+		_mChangePicture = FALSE;
+	}
 }
