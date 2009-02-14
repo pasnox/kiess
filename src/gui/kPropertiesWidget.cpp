@@ -36,11 +36,9 @@ void kPropertiesWidget::saveDatas()
 
 void kPropertiesWidget::reject()
 {
-	qWarning( "kPropertiesWidget::reject()" );
 }
 
 void kPropertiesWidget::accept()
 {
 	saveDatas();
-	qWarning( "kPropertiesWidget::accept()" );
 }

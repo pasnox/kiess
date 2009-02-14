@@ -39,6 +39,7 @@ protected:
 	bool mFlipLeft;
 	
 	void keyPressEvent( QKeyEvent* event );
+	void mousePressEvent( QMouseEvent* event );
 	void resizeEvent( QResizeEvent* event );
 	
 	QPointF posForLocation( int x, int y ) const;

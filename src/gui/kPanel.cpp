@@ -38,12 +38,15 @@ kPanel::kPanel( QWidget* parent )
 
 	// container item
 	mContainerItem = new kPanelItem( bounds, QColor( 226, 255, 92, 64 ) );
+	mContainerItem->setZValue( 10 );
 	mScene->addItem( mContainerItem );
 
 	// widget to show on flip
 	mBackItem = new kPanelItem( bounds, QColor() );
 	mBackItem->setTransform( QTransform().rotate( 180, Qt::YAxis ) );
 	mBackItem->setParentItem( mContainerItem );
+	mBackItem->setZValue( 30 );
+	mBackItem->setVisible( false );
 	
 	// selection item
 	mSelectionItem = new kPanelItem( QRectF( -60, -60, 120, 120 ), Qt::gray );
@@ -58,6 +61,7 @@ kPanel::kPanel( QWidget* parent )
 	singleItem->setParentItem( mContainerItem );
 	singleItem->setFlag( QGraphicsItem::ItemIsFocusable );
 	singleItem->setPixmap( QPixmap( ":/gui/single.png" ) );
+	singleItem->setZValue( 20 );
 	mItems[ 0 ][ 0 ] = singleItem;
 	connect( singleItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
@@ -67,6 +71,7 @@ kPanel::kPanel( QWidget* parent )
 	teamItem->setParentItem( mContainerItem );
 	teamItem->setFlag( QGraphicsItem::ItemIsFocusable );
 	teamItem->setPixmap( QPixmap( ":/gui/team.png" ) );
+	teamItem->setZValue( 20 );
 	mItems[ 1 ][ 0 ] = teamItem;
 	connect( teamItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
@@ -76,6 +81,7 @@ kPanel::kPanel( QWidget* parent )
 	propertiesItem->setParentItem( mContainerItem );
 	propertiesItem->setFlag( QGraphicsItem::ItemIsFocusable );
 	propertiesItem->setPixmap( QPixmap( ":/gui/properties.png" ) );
+	propertiesItem->setZValue( 20 );
 	mItems[ 0 ][ 1 ] = propertiesItem;
 	connect( propertiesItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
@@ -85,6 +91,7 @@ kPanel::kPanel( QWidget* parent )
 	aboutItem->setParentItem( mContainerItem );
 	aboutItem->setFlag( QGraphicsItem::ItemIsFocusable );
 	aboutItem->setPixmap( QPixmap( ":/gui/about.png" ) );
+	aboutItem->setZValue( 20 );
 	mItems[ 1 ][ 1 ] = aboutItem;
 	connect( aboutItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
@@ -182,6 +189,38 @@ void kPanel::keyPressEvent( QKeyEvent* event )
 	setCurrentItem( mSelectedX, mSelectedY, true );
 }
 
+void kPanel::mousePressEvent( QMouseEvent* event )
+{
+	if ( event->modifiers() == Qt::NoModifier && event->button() == Qt::LeftButton && !mFlipped )
+	{
+		kPanelItem* item = static_cast<kPanelItem*>( itemAt( event->pos() ) );
+		int newX = mSelectedX, newY = mSelectedY;
+		
+		foreach ( const int& x, mItems.keys() )
+		{
+			foreach ( const int& y, mItems[ x ].keys() )
+			{
+				if ( mItems[ x ][ y ] == item )
+				{
+					newX = x;
+					newY = y;
+					break;
+				}
+			}
+		}
+		
+		if ( newX != mSelectedX || newY != mSelectedY )
+		{
+			mSelectedX = newX;
+			mSelectedY = newY;
+			setCurrentItem( mSelectedX, mSelectedY, true );
+			return;
+		}
+	}
+	
+	QGraphicsView::mousePressEvent( event );
+}
+
 void kPanel::resizeEvent( QResizeEvent* event )
 {
 	QGraphicsView::resizeEvent( event );
@@ -251,6 +290,7 @@ void kPanel::updateFlipStep( qreal val )
 	
 	if ( val == 0 )
 	{
+		mBackItem->setVisible( false );
 		mItems[ mSelectedX ][ mSelectedY ]->setFocus();
 	}
 }
@@ -271,6 +311,7 @@ void kPanel::flip()
 		{
 			widget->loadDatas();
 			mBackItem->setWidget( widget );
+			mBackItem->setVisible( true );
 			
 			mFlipped = true;
 			mFlipLeft = mSelectionItem->pos().x() < 0;
@@ -280,6 +321,8 @@ void kPanel::flip()
 	}
 	else
 	{
+		mBackItem->setVisible( true );
+		
 		mFlipped = false;
 		mFlipTimeLine->setDirection( QTimeLine::Backward );
 		mFlipTimeLine->start();

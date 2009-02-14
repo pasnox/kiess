@@ -5,6 +5,7 @@
 #include <QGraphicsProxyWidget>
 #include <QPainter>
 #include <QWidget>
+#include <QGraphicsSceneMouseEvent>
 
 kPanelItem::kPanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget )
 	: QObject( 0 ), QGraphicsRectItem( rect ),
@@ -187,6 +188,49 @@ void kPanelItem::keyReleaseEvent( QKeyEvent* event )
 	if ( isFlipped() || event->isAutoRepeat() || event->key() != Qt::Key_Return )
 	{
 		QGraphicsRectItem::keyReleaseEvent( event );
+		return;
+	}
+	
+	if ( mFlipTimeLine.direction() != QTimeLine::Backward )
+	{
+		mFlipTimeLine.stop();
+		mFlipTimeLine.setDirection( QTimeLine::Backward );
+		mFlipTimeLine.start();
+	}
+}
+
+void kPanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
+{
+	if ( isFlipped() && canMove() )
+	{
+		if ( event->button() == Qt::RightButton )
+		{
+			mEmbeddedWidget->reject();
+			emit activated();
+			return;
+		}
+		else if ( event->button() == Qt::LeftButton )
+		{
+			mEmbeddedWidget->accept();
+			emit activated();
+			return;
+		}
+	}
+	else if ( !canMove() || event->button() != Qt::LeftButton )
+	{
+		QGraphicsRectItem::mousePressEvent( event );
+		return;
+	}
+	
+	mFlipTimeLine.setDirection( QTimeLine::Forward );
+	mFlipTimeLine.start();
+}
+
+void kPanelItem::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
+{
+	if ( isFlipped() || event->button() != Qt::LeftButton )
+	{
+		QGraphicsRectItem::mouseReleaseEvent( event );
 		return;
 	}
 	
