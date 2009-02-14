@@ -12,7 +12,7 @@ class kBoard : public QGraphicsView
 	Q_OBJECT
 	
 public:
-	kBoard(const int& gridX = 5, const int& gridY = 5, QWidget* parent = 0);
+	kBoard(const int& gridX = 6, const int& gridY = 4, QWidget* parent = 0);
 	virtual ~kBoard();
 	
 	virtual QSize						sizeHint() const;
