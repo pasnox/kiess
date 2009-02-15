@@ -4,6 +4,7 @@
 
 #include <QGraphicsProxyWidget>
 #include <QPainter>
+#include <QDebug>
 
 kCardItem::kCardItem( const QRectF& rect, const QBrush& brush)
 	: QObject( 0 ), QGraphicsRectItem( rect ),
@@ -39,7 +40,7 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
     painter->setOpacity(opacity());
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(0, 0, 0, 64));
-    painter->drawRoundRect(rect().translated(2, 2));
+    painter->drawRoundRect(rect().translated(2, 2), 10, 10);
 
     QLinearGradient gradient(rect().topLeft(), rect().bottomRight());
     const QColor col = _mBrush.color();
@@ -49,7 +50,7 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
 
 
     painter->setPen(QPen(Qt::black, 1));
-    painter->drawRoundRect(rect());
+    painter->drawRoundRect(rect(), 10, 10);
 	QRectF source(0.0, 0.0, _mPixmap.width(), _mPixmap.height());
 	QRectF target(- rect().width() / 4 + _mPixmapBorder, -rect().height() / 4 + _mPixmapBorder, rect().width() / 2 - _mPixmapBorder * 2, rect().height() / 2 - _mPixmapBorder * 2);
     if (!_mPixmap.isNull()) {
