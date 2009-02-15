@@ -11,8 +11,12 @@ kCardItem::kCardItem( const QRectF& rect, const QBrush& brush)
 	_mLastVal( 0 ),
 	_mOpacity( 1 ),
 	_mFlipTimeLine( 500, this ),
-	_mSourcePixmap(QPixmap()) //source pixmap
+	_mSourcePixmap(QPixmap()), //source pixmap
+	_mCardState(FALSE),
+	_mPixmapBorder(3)
 {
+	_mFlipTimeLine.setDirection( QTimeLine::Forward );
+
 	connect( &_mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( updateValue( qreal ) ) );
 	connect( &_mFlipTimeLine, SIGNAL( finished() ), this, SLOT( finishedRotation( ) ) );
 }
@@ -46,14 +50,18 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
 
     painter->setPen(QPen(Qt::black, 1));
     painter->drawRoundRect(rect());
+	QRectF source(0.0, 0.0, _mPixmap.width(), _mPixmap.height());
+	QRectF target(- rect().width() / 4 + _mPixmapBorder, -rect().height() / 4 + _mPixmapBorder, rect().width() / 2 - _mPixmapBorder * 2, rect().height() / 2 - _mPixmapBorder * 2);
     if (!_mPixmap.isNull()) {
         painter->scale(1.95, 1.95);
-        painter->drawPixmap(-_mPixmap.width() / 2, -_mPixmap.height() / 2, _mPixmap);
+		painter->drawPixmap(target, _mPixmap, source);
     }
 }
 
-//__________________________________________________________________________________________________________________________________________________
+//________________________________________________________________________________________________________________________________________
 //METHOD
+//________________________________________________________________________________________________________________________________________
+
 qreal kCardItem::opacity() const
 {
 	kCardItem *parent = parentItem() ? (kCardItem *)parentItem() : 0;
@@ -73,24 +81,36 @@ void kCardItem::setOpacity(qreal opacity)
  * \param pixmap
  * Pixmap to give
  * 
- * Permuts between null pixmap and source pixmap when card is folded
+ * Permutes between null pixmap and source pixmap when card is folded
  */
 void kCardItem::setPixmap(const QPixmap &pixmap)
 {
-	//store the first QPixmap assignment
-	if (_mSourcePixmap.isNull())
+	if (_mSourcePixmap.isNull()) {
+		//store first assignment
 		_mSourcePixmap = pixmap;
-	//set a null pixmap (card)
-	if (!_mPixmap.isNull())
+		//store current pixmap
 		_mPixmap = pixmap;
-	else
-		_mPixmap = _mSourcePixmap; //restore the source pixmap
+		//card is front
+		_mCardState = TRUE;
+		return;
+	}
+
+	if (_mCardState == TRUE) { //card is front
+		_mCardState = FALSE;
+		_mPixmap = QPixmap( ":/board/blueBack.png" );
+	}
+	else { //card is back
+		_mCardState = TRUE;
+		_mPixmap = _mSourcePixmap;
+	}
     if (scene() && isVisible())
         update();
 }
 
-//____________________________________________________________________________________________________________
-//Event (Keyboard and Mouse)
+//________________________________________________________________________________________________________________________________________
+// EVENT
+//________________________________________________________________________________________________________________________________________
+
 void kCardItem::keyPressEvent(QKeyEvent *event)
 {
 	if (event->key() != Qt::Key_Return) {
@@ -99,7 +119,6 @@ void kCardItem::keyPressEvent(QKeyEvent *event)
     }
 	//animation
 	_mChangePicture = FALSE;
-	_mFlipTimeLine.setDirection( QTimeLine::Forward );
 	_mFlipTimeLine.start();
 }
 
@@ -116,23 +135,45 @@ void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 	Q_UNUSED(event);
 	emit returnCardItem(this);
 }
+//________________________________________________________________________________________________________________________________________
+// ANIMATION
+//________________________________________________________________________________________________________________________________________
 
+/*!
+* \brief
+* Card Item Rotation.
+*/
 void kCardItem::updateValue( qreal value )
 {
-	setTransform( QTransform().rotate((value * 180), Qt::YAxis  ));
-	if (value >= .5 && _mChangePicture == FALSE) {
-		_mChangePicture = TRUE;
-		setPixmap(QPixmap());
+	//rotate card
+	setTransform( QTransform().rotate((value * 180), Qt::YAxis  )); //rotate by 180° the card item
+	if (value >= .5 && _mChangePicture == FALSE &&  _mFlipTimeLine.direction() == QTimeLine::Forward) { //when the rotation is at 90°, change the  card picture (front / back)
+		_mChangePicture = TRUE; //change flag
+		setPixmap(QPixmap()); //flip picture
+	}
+	if (value <= .5 && _mChangePicture == FALSE &&  _mFlipTimeLine.direction() == QTimeLine::Backward) { //when the rotation is at 90°, change the  card picture (front / back)
+		_mChangePicture = TRUE; //change flag
+		setPixmap(QPixmap()); //flip picture
 	}
 }
 
+/*!
+ * \brief
+ * Stop timeline.
+  */
 void kCardItem::finishedRotation()
 {
 	//animation
-	if ( _mFlipTimeLine.direction() != QTimeLine::Backward )
-	{
-		_mFlipTimeLine.stop();
+
+	//reverse timeline
+	if ( _mFlipTimeLine.direction() == QTimeLine::Forward)
 		_mFlipTimeLine.setDirection( QTimeLine::Backward );
+	else
+		_mFlipTimeLine.setDirection( QTimeLine::Forward );
+		
+	//stop timeline
+		_mFlipTimeLine.stop();
+		
+		//change flag
 		_mChangePicture = FALSE;
-	}
 }

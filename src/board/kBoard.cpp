@@ -1,6 +1,9 @@
 #include "kBoard.h"
 #include "kCardItem.h"
 
+
+#include <QTimeLine>
+
 #ifndef QT_NO_OPENGL
 #include <QtOpenGL>
 #endif
@@ -15,6 +18,9 @@ kBoard::kBoard(const int& gridX, const int& gridY, QWidget* parent )
 	initBoardParameters();
 
 	createScene();
+
+	QDir pixmapDirectory("Z:/kiess/trunk/src/resources/board/front");
+	createListPixmap(pixmapDirectory);
 
 	createItems();
 
@@ -60,21 +66,37 @@ void kBoard::createItems()
 
 
 	//Create cards
+	int cardCount = 0;
 	for (int i = 0; i < _mGridSize.width(); i++) {
 		for (int j = 0; j < _mGridSize.height(); j++) {
-			kCardItem* cardItem = new kCardItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ) );
+			kCardItem* cardItem = new kCardItem( QRectF( -54, -54, 108, 108 ), QColor( 0, 0, 255, 128 ) );
 			connect(cardItem, SIGNAL(returnCardItem(kCardItem*)), this, SLOT(selectedCardItem(kCardItem*)));
 			cardItem->setFlag(QGraphicsItem::ItemIsSelectable);
 			cardItem->setPos( posForLocation( i, j ) );
 			cardItem->setParentItem( _mContainerItem );
 			cardItem->setFlag( QGraphicsItem::ItemIsFocusable );
-			cardItem->setPixmap( QPixmap( ":/board/single.png" ) );
+			cardItem->setPixmap( QPixmap(_mListOfPixmap[cardCount++]) );
 			_mItems[ i ][ j ] = cardItem;
 		}
 	}
 
 	// default item and selection
 	setCurrentItem( 0, 0, false );
+}
+
+/*!
+* \brief
+* List all pixmap in a specific directory
+*/
+QStringList kBoard::createListPixmap(const QDir& directory)
+{
+	QStringList filters; 
+	filters << "*.png";
+	QStringList tmpListOfPixmap = directory.entryList(filters);
+	foreach(QString file, tmpListOfPixmap) {
+		_mListOfPixmap << directory.absolutePath() + "/" + file;
+	}
+	return _mListOfPixmap;
 }
 
 /*!
@@ -199,4 +221,3 @@ void kBoard::resizeEvent(QResizeEvent *event)
     QGraphicsView::resizeEvent(event);
     fitInView(_mScene->sceneRect(), Qt::KeepAspectRatio);
 }
-

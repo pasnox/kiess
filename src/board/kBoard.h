@@ -2,18 +2,19 @@
 #define KBOARD_H
 
 #include <QGraphicsView>
-#include <QTimeLine>
 #include <QMap>
 
 class kCardItem;
+class QDir;
+class QTimeLine;
 
 class kBoard : public QGraphicsView
 {
 	Q_OBJECT
 	
 public:
-	kBoard(const int& gridX = 6, const int& gridY = 4, QWidget* parent = 0);
-	virtual ~kBoard();
+										kBoard(const int& gridX = 6, const int& gridY = 4, QWidget* parent = 0);
+	virtual								~kBoard();
 	
 	virtual QSize						sizeHint() const;
 
@@ -21,6 +22,7 @@ public:
 //METHOD
 private:
 	void								createItems();
+	QStringList							createListPixmap(const QDir& directory);
 	void								createScene();
 	void								initBoardParameters();
 //SELECTION
@@ -51,6 +53,7 @@ private:
 
 //items
 	kCardItem							*_mContainerItem;
+	QStringList							_mListOfPixmap;
 	kCardItem							*_mSelectionItem;
 	QMap<int, QMap<int, kCardItem*> >	_mItems;
 
