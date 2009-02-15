@@ -32,11 +32,11 @@ private slots:
 //MEMBERS
 private:
 	QBrush								_mBrush;
-	bool								_mChangePicture;
-	QTimeLine							_mFlipTimeLine;
+	bool								_mChangePicture; //Flag, change picture when card rotate by 90°
+	QTimeLine							_mFlipTimeLine; //Rotation time line
     qreal								_mLastVal;
     qreal								_mOpacity;
-    QPixmap								_mPixmap;
+    QPixmap								_mPixmap; //current pixmap
 	QPixmap								_mSourcePixmap; //first pixmap assignment
 
 //EVENT
@@ -46,7 +46,7 @@ protected:
 	void								mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 signals:
-	void								returnCardItem(kCardItem*);
+	void								returnCardItem(kCardItem*); //return cardItem to the view
 };
 
 #endif // KCARDITEM_H
