@@ -20,8 +20,10 @@ public:
 	virtual QRectF boundingRect() const;
 	
 	kGuiScenePanelItem* item( const QPoint& pos ) const;
+	bool isAnimate() const;
+	
+	kGuiScenePanelItem* currentItem() const;
 	void setCurrentItem( const QPoint& pos, bool animate );
-	bool isSelectionMoving() const;
 
 protected:
 	QBrush mBrush;
