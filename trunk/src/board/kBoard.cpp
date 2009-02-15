@@ -75,7 +75,8 @@ void kBoard::createItems()
 			cardItem->setPos( posForLocation( i, j ) );
 			cardItem->setParentItem( _mContainerItem );
 			cardItem->setFlag( QGraphicsItem::ItemIsFocusable );
-			cardItem->setPixmap( QPixmap(_mListOfPixmap[cardCount++]) );
+			if (_mListOfPixmap.count() > cardCount) cardItem->setPixmap( QPixmap(_mListOfPixmap[cardCount++]) );
+			else cardItem->setPixmap( QPixmap( ":/board/single.png" ) );
 			_mItems[ i ][ j ] = cardItem;
 		}
 	}
@@ -131,6 +132,7 @@ void kBoard::initBoardParameters()
 	setViewportUpdateMode( FullViewportUpdate );
 	setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform );
 	setBackgroundBrush( QPixmap( ":/board/background.jpg" ) );
+
 
 #ifndef QT_NO_OPENGL
 	setViewport( new QGLWidget( QGLFormat( QGL::SampleBuffers ) ) );
