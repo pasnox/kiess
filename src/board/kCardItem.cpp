@@ -119,7 +119,6 @@ void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 
 void kCardItem::updateValue( qreal value )
 {
-	//setTransform( QTransform().scale( 1 -value /10.0, 1 -value /10.0 ) );
 	setTransform( QTransform().rotate((value * 180), Qt::YAxis  ));
 	if (value >= .5 && _mChangePicture == FALSE) {
 		_mChangePicture = TRUE;
