@@ -26,6 +26,8 @@ public:
 protected:
 	QBrush mBrush;
 	QSize mGridSize;
+	qreal mSelectionItemFactor;
+	qreal mItemFactor;
 	QMap<int, QMap<int, kGuiScenePanelItem*> > mItems;
 	QTimeLine mSelectionTimeLine;
 	QPoint mSelectedPos;
@@ -33,7 +35,7 @@ protected:
 	QPointF mSelectionEnd;
 	kGuiScenePanelItem* mSelectionItem;
 	
-	QPointF gridPosition( const QPoint& pos ) const;
+	QPointF gridPosition( const QPoint& pos, qreal factor ) const;
 	bool isKeyPad( QKeyEvent* event ) const;
 	void keyPressEvent( QKeyEvent* event );
 	void mousePressEvent( QGraphicsSceneMouseEvent* event );

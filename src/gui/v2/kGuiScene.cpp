@@ -23,11 +23,12 @@ void kGuiScene::initialize( const QSize& gridSize )
 	qreal min = qMin( mGui->sizeHint().width(), mGui->sizeHint().height() ) *0.85;
 	qreal x = ( mGui->sizeHint().width() -min ) /2;
 	qreal y = ( mGui->sizeHint().height() -min ) /2;
-	QRectF bounds = QRectF( QPointF( x, y ), QSizeF( min, min ) );
+	QRectF bounds = QRectF( QPointF( 0, 0 ), QSizeF( min, min ) );
 	
 	setSceneRect( QRect( QPoint( 0, 0 ), mGui->sizeHint() ) );
 	
 	mPanel = new kGuiScenePanel( bounds, gridSize, this );
+	mPanel->setPos( x, y );
 	addItem( mPanel );
 	
 	mGui->setFrameStyle( QFrame::NoFrame );

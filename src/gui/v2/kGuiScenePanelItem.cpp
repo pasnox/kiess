@@ -7,10 +7,12 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 
+#include <QDebug>
+
 kGuiScenePanelItem::kGuiScenePanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget )
 	: QObject( 0 ), QGraphicsRectItem( rect ),
 	mBrush( brush ),
-	mAnimationTimeLine( 500, this ),
+	mAnimationTimeLine( 750, this ),
 	mLastVal( 0 ),
 	mOpacity( 1 ),
 	mEmbeddedWidget( embeddedWidget )
@@ -24,6 +26,9 @@ kGuiScenePanelItem::~kGuiScenePanelItem()
 
 void kGuiScenePanelItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* options, QWidget* widget )
 {
+	Q_UNUSED( options );
+	Q_UNUSED( widget );
+	
 	QTransform x = painter->worldTransform();
 
 	QLineF unit = x.map(QLineF(0, 0, 1, 1));
@@ -62,9 +67,10 @@ void kGuiScenePanelItem::paint( QPainter* painter, const QStyleOptionGraphicsIte
 
 	painter->setPen(QPen(Qt::black, 1));
 	painter->drawRoundRect(rect());
+	
 	if (!mPixmap.isNull()) {
 		painter->scale(1.95, 1.95);
-		painter->drawPixmap(-mPixmap.width() / 2, -mPixmap.height() / 2, mPixmap);
+		painter->drawPixmap(mPixmap.width() / 2, mPixmap.height() / 2, mPixmap);
 	}
 }
 
@@ -209,12 +215,26 @@ void kGuiScenePanelItem::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
 {
 	mLastVal = value;
+	qreal x = rect().center().x();
+	qreal y = rect().center().y();
 	
 	QTransform transform;
-	transform.scale( 1 -value /10.0, 1 -value /10.0 );
-	transform.translate( rect().center().x(), rect().center().y() );
+	transform.translate( x, y );
+	
+	// scale
+	if ( value <= 0.5 )
+	{
+		transform.scale( 1- ( 1 *value ), 1 -( 1 *value ) );
+	}
+	else
+	{
+		transform.scale( 1 *value, 1 *value );
+	}
+	
+	// rotation
 	transform.rotate( 360 *value, Qt::ZAxis );
-	transform.translate( rect().left(), rect().top() );
+	
+	transform.translate( -x, -y );
 	setTransform( transform );
 	
 	/*
