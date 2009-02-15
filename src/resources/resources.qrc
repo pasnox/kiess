@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/board" >
+        <file alias="blueBack.png" >board/back/blueBack.png</file>
         <file alias="background.jpg" >board/background.jpg</file>
-        <file alias="single.png" >board/single.png</file>
     </qresource>
     <qresource prefix="/gui" >
         <file alias="about.png" >gui/about.png</file>
