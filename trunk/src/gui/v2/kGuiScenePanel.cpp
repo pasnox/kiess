@@ -9,6 +9,8 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	: QObject( parent ), QGraphicsRectItem( rect ),
 	mBrush( QColor( 226, 255, 92, 64 ) ),
 	mGridSize( gridSize ),
+	mSelectionItemFactor( 0.1 ),
+	mItemFactor( 0.15 ),
 	mSelectionTimeLine( 250, this )
 {	
 	qreal width = ( rect.width() /(qreal)mGridSize.width() );
@@ -16,7 +18,7 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	qreal left = ( rect.width() /(qreal)mGridSize.width() );
 	qreal top = ( rect.height() /(qreal)mGridSize.height() );
 	
-	mSelectionItem = new kGuiScenePanelItem( QRectF( left *0.1, top *0.1, width *0.8, height *0.8 ), Qt::gray );
+	mSelectionItem = new kGuiScenePanelItem( QRectF( 0, 0, width *0.8, height *0.8 ), Qt::gray );
 	mSelectionItem->setParentItem( this );
 	mSelectionItem->setZValue( -1 );
 	
@@ -24,11 +26,11 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	{
 		for ( int y = 0; y < mGridSize.height(); y++ )
 		{
-			kGuiScenePanelItem* item = new kGuiScenePanelItem( QRectF( left *0.15, top *0.15, width *0.7, height *0.7 ), QColor( 214, 240, 110, 128 ) );
+			kGuiScenePanelItem* item = new kGuiScenePanelItem( QRectF( 0, 0, width *0.7, height *0.7 ), QColor( 214, 240, 110, 128 ) );
 			item->setParentItem( this );
 			item->setFlag( QGraphicsItem::ItemIsFocusable );
 			item->setPixmap( QPixmap( ":/gui/single.png" ) );
-			item->setPos( gridPosition( QPoint( x, y ) ) );
+			item->setPos( gridPosition( QPoint( x, y ), mItemFactor ) );
 			item->setZValue( 10 );
 			
 			mItems[ x ][ y ] = item;
@@ -78,13 +80,13 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 	{
 		mSelectionTimeLine.stop();
 		mSelectionStart = mSelectionItem->pos();
-		mSelectionEnd = gridPosition( pos );
+		mSelectionEnd = gridPosition( pos, mSelectionItemFactor );
 		mSelectionTimeLine.start();
 	}
 	else
 	{
 		mSelectionTimeLine.stop();
-		mSelectionItem->setPos( gridPosition( pos ) );
+		mSelectionItem->setPos( gridPosition( pos, mSelectionItemFactor ) );
 		mSelectionStart = mSelectionItem->pos();
 		
 		emit selectionMoved( mSelectionStart );
@@ -96,12 +98,18 @@ bool kGuiScenePanel::isSelectionMoving() const
 	return mSelectionTimeLine.state() == QTimeLine::Running;
 }
 
-QPointF kGuiScenePanel::gridPosition( const QPoint& pos ) const
+QPointF kGuiScenePanel::gridPosition( const QPoint& pos, qreal factor ) const
 {
-	qreal width = rect().width() /(qreal)mGridSize.width();
-	qreal height = rect().height() /(qreal)mGridSize.height();
+	qreal width = ( rect().width() /(qreal)mGridSize.width() );
+	qreal height = ( rect().height() /(qreal)mGridSize.height() );
 	
-	return QPointF( ( pos.x() *width ) +rect().left(), ( pos.y() *height ) +rect().top() );
+	qreal x = width *pos.x();
+	qreal y = height *pos.y();
+	
+	x += width *factor;
+	y += height *factor;
+	
+	return QPointF( x, y );
 }
 
 bool kGuiScenePanel::isKeyPad( QKeyEvent* event ) const
