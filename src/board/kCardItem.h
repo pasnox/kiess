@@ -86,7 +86,26 @@ public:
 	* \see
 	* setPixmapBorder(const int& Border)
 	*/
-	int									pixmapBorder() const {return _mPixmapBorder;}
+	inline int							pixmapBorder() const {return _mPixmapBorder;}
+	/*!
+	* \brief
+	* Set the carItem selected.
+	* 
+	* \see
+	* selected().
+	*/
+	inline void							setSelected(const bool& Selected) {_mIsSelected = Selected;}
+	/*!
+	* \brief
+	* Return cardItem selected state
+	* 
+	* \returns
+	* true : if item is selected
+	* 
+	* \see
+	* setSelected(const bool& Selected) 
+	*/
+	inline bool							selected() const {return _mIsSelected;}
 
     void								setPixmap( const QPixmap& pixmap );
 
@@ -101,6 +120,7 @@ private:
 	bool								_mCardState; // true if front, false if back
 	bool								_mChangePicture; //Flag, change picture when card rotate by 90°
 	QTimeLine							_mFlipTimeLine; //Rotation time line
+	bool								_mIsSelected; //True if card is selected
     qreal								_mLastVal; //gradient parameter
     qreal								_mOpacity; //opacity parameter
     QPixmap								_mPixmap; //current pixmap
