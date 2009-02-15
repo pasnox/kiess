@@ -1,7 +1,6 @@
 #include "kBoard.h"
 #include "kCardItem.h"
 
-
 #include <QTimeLine>
 
 #ifndef QT_NO_OPENGL
@@ -69,7 +68,7 @@ void kBoard::createItems()
 	int cardCount = 0;
 	for (int i = 0; i < _mGridSize.width(); i++) {
 		for (int j = 0; j < _mGridSize.height(); j++) {
-			kCardItem* cardItem = new kCardItem( QRectF( -54, -54, 108, 108 ), QColor( 0, 0, 255, 128 ) );
+			kCardItem* cardItem = new kCardItem( QRectF( -54, -54, 108, 108 ), QColor(14, 151, 206, 255));
 			connect(cardItem, SIGNAL(returnCardItem(kCardItem*)), this, SLOT(selectedCardItem(kCardItem*)));
 			cardItem->setFlag(QGraphicsItem::ItemIsSelectable);
 			cardItem->setPos( posForLocation( i, j ) );
@@ -83,6 +82,8 @@ void kBoard::createItems()
 
 	// default item and selection
 	setCurrentItem( 0, 0, false );
+	if (_mItems[ 0 ][ 0 ])
+		_mItems[ 0 ][ 0 ]->setSelected(TRUE);
 }
 
 /*!
@@ -200,10 +201,12 @@ void kBoard::selectedCardItem( kCardItem* item)
 	for (int i = 0; i < _mGridSize.width(); i++) {
 		for (int j = 0; j < _mGridSize.height(); j++) {
 			itemInList = _mItems[i][j];
+			itemInList->setSelected(FALSE);
 			if (itemInList)
 				if (itemInList == item) { //if item is found in the list of cardItems
 					_mSelectedX = i;
 					_mSelectedY = j;
+					itemInList->setSelected(TRUE);
 				}
 		}
 	}

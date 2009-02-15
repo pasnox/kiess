@@ -14,6 +14,7 @@ kCardItem::kCardItem( const QRectF& rect, const QBrush& brush)
 	_mFlipTimeLine( 500, this ),
 	_mSourcePixmap(QPixmap()), //source pixmap
 	_mCardState(FALSE),
+	_mIsSelected(FALSE),
 	_mPixmapBorder(3)
 {
 	_mFlipTimeLine.setDirection( QTimeLine::Forward );
@@ -134,7 +135,16 @@ void kCardItem::keyReleaseEvent(QKeyEvent *event)
 void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
 	Q_UNUSED(event);
-	emit returnCardItem(this);
+	if (_mIsSelected == TRUE) {
+		//animation
+		_mChangePicture = FALSE;
+		_mFlipTimeLine.start();
+	}
+
+	else {
+		_mIsSelected = TRUE;
+		emit returnCardItem(this);
+	}
 }
 //________________________________________________________________________________________________________________________________________
 // ANIMATION
