@@ -15,8 +15,6 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 {	
 	qreal width = ( rect.width() /(qreal)mGridSize.width() );
 	qreal height = ( rect.height() /(qreal)mGridSize.height() );
-	qreal left = ( rect.width() /(qreal)mGridSize.width() );
-	qreal top = ( rect.height() /(qreal)mGridSize.height() );
 	
 	mSelectionItem = new kGuiScenePanelItem( QRectF( 0, 0, width *0.8, height *0.8 ), Qt::gray );
 	mSelectionItem->setParentItem( this );
@@ -72,6 +70,16 @@ kGuiScenePanelItem* kGuiScenePanel::item( const QPoint& pos ) const
 	return mItems.value( pos.x() ).value( pos.y() );
 }
 
+bool kGuiScenePanel::isAnimate() const
+{
+	return mSelectionTimeLine.state() == QTimeLine::Running;
+}
+
+kGuiScenePanelItem* kGuiScenePanel::currentItem() const
+{
+	return item( mSelectedPos );
+}
+
 void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 {
 	item( pos )->setFocus();
@@ -91,11 +99,6 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 		
 		emit selectionMoved( mSelectionStart );
 	}
-}
-
-bool kGuiScenePanel::isSelectionMoving() const
-{
-	return mSelectionTimeLine.state() == QTimeLine::Running;
 }
 
 QPointF kGuiScenePanel::gridPosition( const QPoint& pos, qreal factor ) const
@@ -119,7 +122,9 @@ bool kGuiScenePanel::isKeyPad( QKeyEvent* event ) const
 
 void kGuiScenePanel::keyPressEvent( QKeyEvent* event )
 {
-	if ( ( event->isAutoRepeat() && isSelectionMoving() ) || !isKeyPad( event ) )
+	kGuiScenePanelItem* it = currentItem();
+	
+	if ( isAnimate() || !isKeyPad( event ) || ( it && it->isAnimate() ) )
 	{
 		QGraphicsRectItem::keyPressEvent( event );
 		return;
@@ -133,7 +138,9 @@ void kGuiScenePanel::keyPressEvent( QKeyEvent* event )
 
 void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
-	if ( event->modifiers() == Qt::NoModifier && event->button() == Qt::LeftButton )
+	kGuiScenePanelItem* it = currentItem();
+	
+	if ( !isAnimate() && ( !it || ( it && !it->isAnimate() ) ) && ( event->modifiers() == Qt::NoModifier && event->button() == Qt::LeftButton ) )
 	{
 		QPoint newPos = mSelectedPos;
 		

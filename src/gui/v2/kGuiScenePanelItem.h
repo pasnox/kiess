@@ -28,7 +28,7 @@ public:
 	void setOpacity( qreal opacity );
 	
 	kGuiScenePanel* panel() const;
-	bool isAnimationRunning() const;
+	bool isAnimate() const;
 
 protected:
 	QBrush mBrush;
@@ -39,11 +39,7 @@ protected:
 	kEmbeddedWidget* mEmbeddedWidget;
 	
 	void keyPressEvent( QKeyEvent* event );
-	//void keyReleaseEvent( QKeyEvent* event );
-	/*
 	void mousePressEvent( QGraphicsSceneMouseEvent* event );
-	void mouseReleaseEvent( QGraphicsSceneMouseEvent* event );
-	*/
 
 private slots:
 	void animationTimeLineChanged( qreal value );

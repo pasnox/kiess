@@ -18,6 +18,7 @@ kGuiScenePanelItem::kGuiScenePanelItem( const QRectF& rect, const QBrush& brush,
 	mEmbeddedWidget( embeddedWidget )
 {
 	connect( &mAnimationTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( animationTimeLineChanged( qreal ) ) );
+	connect( &mAnimationTimeLine, SIGNAL( finished() ), this, SIGNAL( activated() ) );
 }
 
 kGuiScenePanelItem::~kGuiScenePanelItem()
@@ -118,14 +119,20 @@ kGuiScenePanel* kGuiScenePanelItem::panel() const
 	return parentItem() ? static_cast<kGuiScenePanel*>( parentItem() ) : 0;
 }
 
-bool kGuiScenePanelItem::isAnimationRunning() const
+bool kGuiScenePanelItem::isAnimate() const
 {
 	return mAnimationTimeLine.state() == QTimeLine::Running;
 }
 
 void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 {
-	if ( !isAnimationRunning() && mEmbeddedWidget )
+	if ( panel()->currentItem() != this || isAnimate() )
+	{
+		QGraphicsRectItem::keyPressEvent( event );
+		return;
+	}
+	
+	if ( mEmbeddedWidget )
 	{
 		if ( event->key() == Qt::Key_Escape )
 		{
@@ -141,37 +148,24 @@ void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 		}
 	}
 	
-	if ( event->key() != Qt::Key_Return )
+	if ( event->key() != Qt::Key_Return || isAnimate() )
 	{
 		QGraphicsRectItem::keyPressEvent( event );
 		return;
 	}
 	
-	mAnimationTimeLine.stop();
-	mAnimationTimeLine.setDirection( QTimeLine::Forward );
 	mAnimationTimeLine.start();
 }
-/*
-void kGuiScenePanelItem::keyReleaseEvent( QKeyEvent* event )
+
+void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
-	//if ( isFlipped() || event->isAutoRepeat() || event->key() != Qt::Key_Return )
+	if ( panel()->currentItem() != this || isAnimate() )
 	{
-		QGraphicsRectItem::keyReleaseEvent( event );
+		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
 	
-	if ( mAnimateTimeLine.direction() != QTimeLine::Backward )
-	{
-		mAnimateTimeLine.stop();
-		mAnimateTimeLine.setDirection( QTimeLine::Backward );
-		mAnimateTimeLine.start();
-	}
-}
-*/
-/*
-void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
-{
-	if ( isFlipped() && canMove() )
+	if ( mEmbeddedWidget )
 	{
 		if ( event->button() == Qt::RightButton )
 		{
@@ -186,32 +180,16 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 			return;
 		}
 	}
-	else if ( !canMove() || event->button() != Qt::LeftButton )
+	
+	if ( event->button() != Qt::LeftButton )
 	{
 		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
 	
-	mFlipTimeLine.setDirection( QTimeLine::Forward );
-	mFlipTimeLine.start();
+	mAnimationTimeLine.start();
 }
 
-void kGuiScenePanelItem::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
-{
-	if ( isFlipped() || event->button() != Qt::LeftButton )
-	{
-		QGraphicsRectItem::mouseReleaseEvent( event );
-		return;
-	}
-	
-	if ( mFlipTimeLine.direction() != QTimeLine::Backward )
-	{
-		mFlipTimeLine.stop();
-		mFlipTimeLine.setDirection( QTimeLine::Backward );
-		mFlipTimeLine.start();
-	}
-}
-*/
 void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
 {
 	mLastVal = value;
@@ -236,11 +214,4 @@ void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
 	
 	transform.translate( -x, -y );
 	setTransform( transform );
-	
-	/*
-	if ( mFlipTimeLine.direction() == QTimeLine::Backward && value == 0 && mEmbeddedWidget && !isFlipped() )
-	{
-		emit activated();
-	}
-	*/
 }
