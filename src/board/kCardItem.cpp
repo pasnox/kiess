@@ -135,6 +135,8 @@ void kCardItem::keyReleaseEvent(QKeyEvent *event)
 void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
 	Q_UNUSED(event);
+	if (!parentItem()) return;
+
 	if (_mIsSelected == TRUE) {
 		//animation
 		_mChangePicture = FALSE;

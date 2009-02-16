@@ -18,6 +18,12 @@ public:
 	
 	virtual QSize						sizeHint() const;
 
+	//MODE
+	enum BoardViewMode {
+		VIEW2D,
+		VIEW3D
+	} boardViewMode;
+
 //_________________________________________________________________________
 //METHOD
 private:
@@ -45,6 +51,7 @@ private:
 //ANIMATION
 	QPointF								_mEndPos;
 	QPointF								_mStartPos;
+
 	QTimeLine							*_mFlipTimeLine;
 	QTimeLine							*_mSelectionTimeLine;
 
@@ -62,7 +69,6 @@ private:
 	
 //SELECTION
 	int									_mSelectedX, _mSelectedY;
-
 };
 
 #endif // KBOARD_H

@@ -28,6 +28,7 @@ kBoard::kBoard(const int& gridX, const int& gridY, QWidget* parent )
 
     connect(_mSelectionTimeLine, SIGNAL(valueChanged(qreal)), this, SLOT(updateSelectionStep(qreal)));
 	updateSelectionStep(0);
+
 }
 
 kBoard::~kBoard()
@@ -46,7 +47,7 @@ kBoard::~kBoard()
 
 QSize kBoard::sizeHint() const
 {
-	return QSize( 640, 480 );
+	return QSize( 800, 600 );
 }
 
 //_________________________________________________________________________
@@ -59,7 +60,7 @@ QSize kBoard::sizeHint() const
 void kBoard::createItems()
 {	
 	// selection item
-	_mSelectionItem = new kCardItem( QRectF( -60, -60, 120, 120 ), Qt::gray );
+	_mSelectionItem = new kCardItem( QRectF( -70, -70, 140, 140 ), Qt::gray );
 	_mSelectionItem->setParentItem( _mContainerItem );
 	_mSelectionItem->setZValue( -1 );
 
@@ -68,7 +69,7 @@ void kBoard::createItems()
 	int cardCount = 0;
 	for (int i = 0; i < _mGridSize.width(); i++) {
 		for (int j = 0; j < _mGridSize.height(); j++) {
-			kCardItem* cardItem = new kCardItem( QRectF( -54, -54, 108, 108 ), QColor(14, 151, 206, 255));
+			kCardItem* cardItem = new kCardItem( QRectF( -60, -60, 120, 120 ), QColor(90, 170, 220, 128));
 			connect(cardItem, SIGNAL(returnCardItem(kCardItem*)), this, SLOT(selectedCardItem(kCardItem*)));
 			cardItem->setFlag(QGraphicsItem::ItemIsSelectable);
 			cardItem->setPos( posForLocation( i, j ) );
@@ -117,6 +118,14 @@ void kBoard::createScene()
 	// container item
 	_mContainerItem = new kCardItem( bounds, QColor( 226, 255, 92, 64 ) );
 	_mScene->addItem( _mContainerItem );
+
+	if (boardViewMode == kBoard::VIEW3D) {
+		QTransform transform;
+		transform.rotate(45, Qt::XAxis);
+		transform.scale(0.8, 1.2);
+		transform.translate(0, -100);
+		_mContainerItem->setTransform(transform);
+	}
 }
 
 /*!
@@ -138,6 +147,8 @@ void kBoard::initBoardParameters()
 #ifndef QT_NO_OPENGL
 	setViewport( new QGLWidget( QGLFormat( QGL::SampleBuffers ) ) );
 #endif
+
+	boardViewMode = kBoard::VIEW2D;
 }
 
 
