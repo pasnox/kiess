@@ -132,7 +132,7 @@ void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 		return;
 	}
 	
-	if ( mEmbeddedWidget )
+	if ( mEmbeddedWidget && panel()->isFlipped() )
 	{
 		if ( event->key() == Qt::Key_Escape )
 		{
@@ -165,7 +165,7 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 		return;
 	}
 	
-	if ( mEmbeddedWidget )
+	if ( mEmbeddedWidget && panel()->isFlipped() )
 	{
 		if ( event->button() == Qt::RightButton )
 		{
