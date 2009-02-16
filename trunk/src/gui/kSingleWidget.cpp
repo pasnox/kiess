@@ -1,6 +1,6 @@
 #include "kSingleWidget.h"
 
-kSingleWidget::kSingleWidget( kPanel* panel )
+kSingleWidget::kSingleWidget( kGuiScenePanel* panel )
 	: kEmbeddedWidget( panel )
 {
 	setupUi( this );

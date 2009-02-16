@@ -3,14 +3,14 @@
 
 #include <QFrame>
 
-class kPanel;
+class kGuiScenePanel;
 
 class kEmbeddedWidget : public QFrame
 {
 	Q_OBJECT
 
 public:
-	kEmbeddedWidget( kPanel* panel )
+	kEmbeddedWidget( kGuiScenePanel* panel )
 	{
 		Q_ASSERT( panel );
 		mPanel = panel;
@@ -23,7 +23,7 @@ public slots:
 	virtual void accept() = 0;
 
 protected:
-	kPanel* mPanel;
+	kGuiScenePanel* mPanel;
 };
 
 #endif // KEMBEDDEDWIDGET_H

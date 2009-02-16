@@ -34,7 +34,7 @@ class kAboutWidget : public kEmbeddedWidget, public Ui::kAboutWidget
 	Q_OBJECT
 
 public:
-	kAboutWidget( kPanel* panel );
+	kAboutWidget( kGuiScenePanel* panel );
 	virtual ~kAboutWidget();
 
 public slots:

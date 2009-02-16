@@ -1,6 +1,10 @@
 #include "kGuiScene.h"
 #include "kGui.h"
 #include "kGuiScenePanel.h"
+#include "kGuiScenePanelItem.h"
+#include "kSingleWidget.h"
+#include "kPropertiesWidget.h"
+#include "kAboutWidget.h"
 
 #ifndef QT_NO_OPENGL
 #include <QtOpenGL>
@@ -29,6 +33,11 @@ void kGuiScene::initialize( const QSize& gridSize )
 	
 	mPanel = new kGuiScenePanel( bounds, gridSize, this );
 	mPanel->setPos( x, y );
+	
+	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
+	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
+	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
+	
 	addItem( mPanel );
 	
 	mGui->setFrameStyle( QFrame::NoFrame );

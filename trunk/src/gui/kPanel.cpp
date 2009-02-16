@@ -56,7 +56,7 @@ kPanel::kPanel( QWidget* parent )
 	// items
 	
 	// single
-	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kSingleWidget( this ) );
+	kPanelItem* singleItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 )/*, new kSingleWidget( this )*/ );
 	singleItem->setPos( posForLocation( 0, 0 ) );
 	singleItem->setParentItem( mContainerItem );
 	singleItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -76,7 +76,7 @@ kPanel::kPanel( QWidget* parent )
 	connect( teamItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
 	// properties
-	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kPropertiesWidget( this ) );
+	kPanelItem* propertiesItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 )/*, new kPropertiesWidget( this )*/ );
 	propertiesItem->setPos( posForLocation( 0, 1 ) );
 	propertiesItem->setParentItem( mContainerItem );
 	propertiesItem->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -86,7 +86,7 @@ kPanel::kPanel( QWidget* parent )
 	connect( propertiesItem, SIGNAL( activated() ), this, SLOT( flip() ) );
 	
 	// about
-	kPanelItem* aboutItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 ), new kAboutWidget( this ) );
+	kPanelItem* aboutItem = new kPanelItem( QRectF( -54, -54, 108, 108 ), QColor( 214, 240, 110, 128 )/*, new kAboutWidget( this )*/ );
 	aboutItem->setPos( posForLocation( 1, 1 ) );
 	aboutItem->setParentItem( mContainerItem );
 	aboutItem->setFlag( QGraphicsItem::ItemIsFocusable );

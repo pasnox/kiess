@@ -1,7 +1,7 @@
 #include "kPropertiesWidget.h"
 #include "kPanel.h"
 
-kPropertiesWidget::kPropertiesWidget( kPanel* panel )
+kPropertiesWidget::kPropertiesWidget( kGuiScenePanel* panel )
 	: kEmbeddedWidget( panel )
 {
 	setupUi( this );
@@ -13,11 +13,14 @@ kPropertiesWidget::~kPropertiesWidget()
 
 void kPropertiesWidget::loadDatas()
 {
+	/*
 	cbFullScreen->setChecked( mPanel->isFullScreen() );
+	*/
 }
 
 void kPropertiesWidget::saveDatas()
 {
+	/*
 	if ( cbFullScreen->isChecked() )
 	{
 		if ( !mPanel->isFullScreen() )
@@ -32,6 +35,7 @@ void kPropertiesWidget::saveDatas()
 			mPanel->showNormal();
 		}
 	}
+	*/
 }
 
 void kPropertiesWidget::reject()

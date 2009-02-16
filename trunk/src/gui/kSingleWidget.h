@@ -9,7 +9,7 @@ class kSingleWidget : public kEmbeddedWidget, public Ui::kSingleWidget
 	Q_OBJECT
 
 public:
-	kSingleWidget( kPanel* panel );
+	kSingleWidget( kGuiScenePanel* panel );
 	virtual ~kSingleWidget();
 
 public slots:
