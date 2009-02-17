@@ -57,6 +57,7 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/gui/kPanelItem.h \
 	src/gui/kPropertiesWidget.h \
 	src/gui/kEmbeddedWidget.h \
+	kBoardDef.h \
 	src/board/kBoard.h \
 	src/board/kCardItem.h \
 	src/gui/kSingleWidget.h \
