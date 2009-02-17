@@ -1,6 +1,8 @@
 #ifndef KBOARD_H
 #define KBOARD_H
 
+#include "kBoardDef.h"
+
 #include <QGraphicsView>
 #include <QMap>
 
@@ -17,12 +19,6 @@ public:
 	virtual								~kBoard();
 	
 	virtual QSize						sizeHint() const;
-
-	//MODE
-	enum BoardViewMode {
-		VIEW2D,
-		VIEW3D
-	} boardViewMode;
 
 //_________________________________________________________________________
 //METHOD
@@ -69,6 +65,9 @@ private:
 	
 //SELECTION
 	int									_mSelectedX, _mSelectedY;
+
+//MODE
+	ViewMode::BoardViewMode				_mboardViewMode;
 };
 
 #endif // KBOARD_H

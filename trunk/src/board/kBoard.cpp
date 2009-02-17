@@ -62,6 +62,7 @@ void kBoard::createItems()
 	// selection item
 	_mSelectionItem = new kCardItem( QRectF( -70, -70, 140, 140 ), Qt::gray );
 	_mSelectionItem->setParentItem( _mContainerItem );
+	_mSelectionItem->setViewMode(_mboardViewMode);
 	_mSelectionItem->setZValue( -1 );
 
 
@@ -77,6 +78,7 @@ void kBoard::createItems()
 			cardItem->setFlag( QGraphicsItem::ItemIsFocusable );
 			if (_mListOfPixmap.count() > cardCount) cardItem->setPixmap( QPixmap(_mListOfPixmap[cardCount++]) );
 			else cardItem->setPixmap( QPixmap( ":/board/single.png" ) );
+			cardItem->setViewMode(_mboardViewMode);
 			_mItems[ i ][ j ] = cardItem;
 		}
 	}
@@ -117,9 +119,11 @@ void kBoard::createScene()
 
 	// container item
 	_mContainerItem = new kCardItem( bounds, QColor( 226, 255, 92, 64 ) );
+	_mContainerItem->setAcceptedMouseButtons(Qt::NoButton);
+
 	_mScene->addItem( _mContainerItem );
 
-	if (boardViewMode == kBoard::VIEW3D) {
+	if (_mboardViewMode == ViewMode::VIEW3D) {
 		QTransform transform;
 		transform.rotate(45, Qt::XAxis);
 		transform.scale(0.8, 1.2);
@@ -148,7 +152,8 @@ void kBoard::initBoardParameters()
 	setViewport( new QGLWidget( QGLFormat( QGL::SampleBuffers ) ) );
 #endif
 
-	boardViewMode = kBoard::VIEW2D;
+	//View mode (2D / 3D)
+	 _mboardViewMode = ViewMode::VIEW2D;
 }
 
 

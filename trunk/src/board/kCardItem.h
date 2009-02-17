@@ -1,6 +1,8 @@
 #ifndef KCARDITEM_H
 #define KCARDITEM_H
 
+#include "kBoardDef.h"
+
 #include <QGraphicsRectItem>
 #include <QBrush>
 #include <QTimeLine>
@@ -109,6 +111,27 @@ public:
 
     void								setPixmap( const QPixmap& pixmap );
 
+	/*!
+	 * \brief
+	 * Set the view mode 2D ou 3D.
+	 * 
+	 * \param mode
+	 * values possible : ViewMode::VIEW2D, ViewMode::VIEW3D
+	 * \see
+	 * viewMode()
+	 */
+	void							setViewMode(const ViewMode::BoardViewMode& mode);
+	/*!
+	 * \brief
+	 * Return the view mode
+	 * 
+	 * \returns
+	 * values possible : ViewMode::VIEW2D, ViewMode::VIEW3D
+	 * \see
+	 * setViewMode(const ViewMode::BoardViewMode& mode)
+	 */
+	inline ViewMode::BoardViewMode		viewMode() const {return _mViewMode;}
+
 private slots:
 	void								updateValue( qreal value );
 	void								finishedRotation(); //slot launch when the card rotation is finished
@@ -125,7 +148,8 @@ private:
     qreal								_mOpacity; //opacity parameter
     QPixmap								_mPixmap; //current pixmap
 	int									_mPixmapBorder; //space between the picture border and the item border
-	QPixmap								_mSourcePixmap; //first pixmap assignment
+	QPixmap								_mSourcePixmap; //first pixmap assignmen
+	ViewMode::BoardViewMode				_mViewMode;
 
 //EVENT
 protected:

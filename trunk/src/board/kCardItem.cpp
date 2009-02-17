@@ -15,7 +15,8 @@ kCardItem::kCardItem( const QRectF& rect, const QBrush& brush)
 	_mSourcePixmap(QPixmap()), //source pixmap
 	_mCardState(FALSE),
 	_mIsSelected(FALSE),
-	_mPixmapBorder(3)
+	_mPixmapBorder(3),
+	_mViewMode(ViewMode::VIEW2D)
 {
 	_mFlipTimeLine.setDirection( QTimeLine::Forward );
 
@@ -41,6 +42,7 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
     painter->setOpacity(opacity());
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(0, 0, 0, 64));
+
     painter->drawRoundRect(rect().translated(2, 2), 10, 10);
 
     QLinearGradient gradient(rect().topLeft(), rect().bottomRight());
@@ -49,6 +51,8 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
     gradient.setColorAt(1, col.dark(int(200 + _mLastVal * 50)));
     painter->setBrush(gradient);
 
+	if (_mViewMode == ViewMode::VIEW3D)
+		painter->translate(0, -rect().height());
 
     painter->setPen(QPen(Qt::black, 1));
     painter->drawRoundRect(rect(), 10, 10);
@@ -58,6 +62,7 @@ void kCardItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
         painter->scale(1.95, 1.95);
 		painter->drawPixmap(target, _mPixmap, source);
     }
+
 }
 
 //________________________________________________________________________________________________________________________________________
@@ -135,8 +140,6 @@ void kCardItem::keyReleaseEvent(QKeyEvent *event)
 void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
 	Q_UNUSED(event);
-	if (!parentItem()) return;
-
 	if (_mIsSelected == TRUE) {
 		//animation
 		_mChangePicture = FALSE;
@@ -159,7 +162,15 @@ void kCardItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 void kCardItem::updateValue( qreal value )
 {
 	//rotate card
-	setTransform( QTransform().rotate((value * 180), Qt::YAxis  )); //rotate by 180° the card item
+	if (_mViewMode == ViewMode::VIEW3D) {
+		QTransform transform;
+		transform.rotate(-50, Qt::XAxis); //perspective view
+		transform.translate(0, -rect().height());
+		transform.rotate((value * -130), Qt::XAxis  );
+		setTransform(transform);
+	}
+	else
+		setTransform( QTransform().rotate((value * 180), Qt::YAxis  )); //rotate by 180° the card item
 	if (value >= .5 && _mChangePicture == FALSE &&  _mFlipTimeLine.direction() == QTimeLine::Forward) { //when the rotation is at 90°, change the  card picture (front / back)
 		_mChangePicture = TRUE; //change flag
 		setPixmap(QPixmap()); //flip picture
@@ -189,4 +200,14 @@ void kCardItem::finishedRotation()
 		
 		//change flag
 		_mChangePicture = FALSE;
+}
+
+void kCardItem::setViewMode( const ViewMode::BoardViewMode& mode )
+{
+	_mViewMode = mode;
+	if (_mViewMode == ViewMode::VIEW3D) {
+		QTransform transform;
+		transform.rotate(-50, Qt::XAxis); //perspective view
+		setTransform(transform);
+	}
 }
