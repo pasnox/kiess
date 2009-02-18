@@ -18,13 +18,13 @@ kBoard::kBoard(const int& gridX, const int& gridY, QWidget* parent )
 
 	createScene();
 
+	//TEST directory to load pictures
 	QDir pixmapDirectory("Z:/kiess/trunk/src/resources/board/front");
 	createListPixmap(pixmapDirectory);
 
 	createItems();
 
     _mSelectionTimeLine = new QTimeLine(150, this);
-    _mFlipTimeLine = new QTimeLine(500, this);
 
     connect(_mSelectionTimeLine, SIGNAL(valueChanged(qreal)), this, SLOT(updateSelectionStep(qreal)));
 	updateSelectionStep(0);
@@ -62,7 +62,7 @@ void kBoard::createItems()
 	// selection item
 	_mSelectionItem = new kCardItem( QRectF( -70, -70, 140, 140 ), Qt::gray );
 	_mSelectionItem->setParentItem( _mContainerItem );
-	_mSelectionItem->setViewMode(_mboardViewMode);
+	_mSelectionItem->setViewMode(_mboardViewMode); // 2D or 3D mode 
 	_mSelectionItem->setZValue( -1 );
 
 
@@ -71,15 +71,17 @@ void kBoard::createItems()
 	for (int i = 0; i < _mGridSize.width(); i++) {
 		for (int j = 0; j < _mGridSize.height(); j++) {
 			kCardItem* cardItem = new kCardItem( QRectF( -60, -60, 120, 120 ), QColor(90, 170, 220, 128));
+			//when user click on item, the item is sent ti the view in order to move selection
 			connect(cardItem, SIGNAL(returnCardItem(kCardItem*)), this, SLOT(selectedCardItem(kCardItem*)));
+			//item can be select
 			cardItem->setFlag(QGraphicsItem::ItemIsSelectable);
 			cardItem->setPos( posForLocation( i, j ) );
 			cardItem->setParentItem( _mContainerItem );
 			cardItem->setFlag( QGraphicsItem::ItemIsFocusable );
 			if (_mListOfPixmap.count() > cardCount) cardItem->setPixmap( QPixmap(_mListOfPixmap[cardCount++]) );
 			else cardItem->setPixmap( QPixmap( ":/board/single.png" ) );
-			cardItem->setViewMode(_mboardViewMode);
-			_mItems[ i ][ j ] = cardItem;
+			cardItem->setViewMode(_mboardViewMode);// 2D or 3D mode 
+			_mItems[ i ][ j ] = cardItem; //store item in a qmap
 		}
 	}
 
@@ -92,6 +94,8 @@ void kBoard::createItems()
 /*!
 * \brief
 * List all pixmap in a specific directory
+* Only in debug and local mode
+* code will disappear
 */
 QStringList kBoard::createListPixmap(const QDir& directory)
 {
@@ -123,10 +127,14 @@ void kBoard::createScene()
 
 	_mScene->addItem( _mContainerItem );
 
+	//In 3D Mode, the item container is rotate for a perspective view
 	if (_mboardViewMode == ViewMode::VIEW3D) {
 		QTransform transform;
+		//perspective
 		transform.rotate(45, Qt::XAxis);
+		//scale to minimize the with and maximize the height
 		transform.scale(0.8, 1.2);
+		//translate to render the item so far
 		transform.translate(0, -100);
 		_mContainerItem->setTransform(transform);
 	}
@@ -140,11 +148,16 @@ void kBoard::initBoardParameters()
 {
 	//GraphicView Properties
 	setFrameStyle( QFrame::NoFrame );
+	//deactivate scroolBar
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
 	setCacheMode( CacheBackground );
+	//full update items
 	setViewportUpdateMode( FullViewportUpdate );
+	//graphical parameters
 	setRenderHints( QPainter::Antialiasing | QPainter::SmoothPixmapTransform );
+	//Pixmap view Background
 	setBackgroundBrush( QPixmap( ":/board/background.jpg" ) );
 
 
@@ -157,10 +170,47 @@ void kBoard::initBoardParameters()
 }
 
 
+/*!
+ * \brief
+ * Compute coordinate
+ * 
+ * \param x
+ * X coordinate in the grid referential.
+ * 
+ * \param y
+ * Y coordinate in the grid referential.
+ * 
+ * \returns
+ * QPointF with scene coordinate
+ * 
+ * \see
+ * locationForPos( int x, int y )
+ */
 QPointF kBoard::posForLocation(int x, int y) const
 {
 	return QPointF(x * 150, y * 150)
 		- QPointF((_mGridSize.width() - 1) * 75, (_mGridSize.height() - 1) * 75);
+}
+
+/*!
+* \brief
+* Compute coordinate
+* 
+* \param x
+* X coordinate in the scene referential.
+* 
+* \param y
+* Y coordinate in the scene referential.
+* 
+* \returns
+* QPointF with grid coordinate
+* 
+* \see
+* posForLocation( int x, int y )
+*/
+QPointF kBoard::locationForPos( int x, int y ) const
+{
+	return QPointF((x + (_mGridSize.width() - 1) * 75) / 150,(y + (_mGridSize.height() - 1) * 75) / 150);
 }
 
 /*!
@@ -180,20 +230,28 @@ QPointF kBoard::posForLocation(int x, int y) const
  */
 void kBoard::setCurrentItem( int x, int y, bool animate )
 {
+	//Check if item exists
 	if (!_mItems[ x ][ y ]) return;
 
 	_mItems[ x ][ y ]->setFocus();
 
 	if ( animate )
 	{
+		//stop the timeline
 		_mSelectionTimeLine->stop();
+		//store start position
 		_mStartPos = _mSelectionItem->pos();
+		//compute end position
 		_mEndPos = posForLocation( x, y );
-		_mSelectionTimeLine->start();
+		//start the timeline connect to the updateSelectionStep(qreal) slot
+		_mSelectionTimeLine->start(); //start animation
 	}
 	else
 	{
+		//animation flag not set
+		//only move item at the position X, Y
 		_mSelectionItem->setPos( posForLocation( x, y ) );
+		//store the start position
 		_mStartPos = _mSelectionItem->pos();
 	}
 }
@@ -210,28 +268,19 @@ void kBoard::setCurrentItem( int x, int y, bool animate )
  */
 void kBoard::selectedCardItem( kCardItem* item)
 {
-	kCardItem* itemInList = 0;
-	_mSelectedX = _mSelectedY = 0;
-	item->setFocus();
-	//iteration
-	for (int i = 0; i < _mGridSize.width(); i++) {
-		for (int j = 0; j < _mGridSize.height(); j++) {
-			itemInList = _mItems[i][j];
-			itemInList->setSelected(FALSE);
-			if (itemInList)
-				if (itemInList == item) { //if item is found in the list of cardItems
-					_mSelectedX = i;
-					_mSelectedY = j;
-					itemInList->setSelected(TRUE);
-				}
-		}
-	}
+	//compute grid position with item scene coordinate
+	QPointF position = locationForPos(item->scenePos().x(), item->scenePos().y());
+	//store in boadr parameters
+	_mSelectedX = position.x();
+	_mSelectedY = position.y();
+	//start animation and selection
 	setCurrentItem(_mSelectedX, _mSelectedY, true);
 }
 
 void kBoard::updateSelectionStep(qreal val)
 {
 	//Animation with timeline
+	//move item selection from the start position to the end position
 	QPointF newPos(_mStartPos.x() + (_mEndPos - _mStartPos).x() * val,
 		_mStartPos.y() + (_mEndPos - _mStartPos).y() * val);
 	_mSelectionItem->setPos(newPos);
