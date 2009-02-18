@@ -24,11 +24,16 @@ public:
 //METHOD
 private:
 	void								createItems();
+	//ONLY FOR DEBUG
+	//STORE CARD PICTURE IN ITEMS
 	QStringList							createListPixmap(const QDir& directory);
+	
 	void								createScene();
 	void								initBoardParameters();
+//Scene/Grid coordinate computation
+	QPointF								locationForPos( int x, int y ) const; //return the QPointF position in the grid referential with a X,Y scene position
+	QPointF								posForLocation( int x, int y ) const; //return the QPointF position in scene referential with X,Y position in the grid
 //SELECTION
-	QPointF								posForLocation( int x, int y ) const; //return the QPointF position for a X,Y position in the grid
 	void 								setCurrentItem( int x, int y, bool animate ); //Set the currentItem and move the _mSelectionItem
 	
 private slots:
@@ -48,7 +53,6 @@ private:
 	QPointF								_mEndPos;
 	QPointF								_mStartPos;
 
-	QTimeLine							*_mFlipTimeLine;
 	QTimeLine							*_mSelectionTimeLine;
 
 //GRID
