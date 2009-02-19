@@ -12,11 +12,12 @@
 #endif
 
 kGuiScene::kGuiScene( kGui* gui )
-	: QGraphicsScene( gui ),
-	mGui( gui ),
-	mPanel( 0 )
+	: QGraphicsScene( gui )
 {
-	Q_ASSERT( mGui );
+	Q_ASSERT( gui );
+	
+	mGui = gui;
+	mPanel = 0;
 }
 
 kGuiScene::~kGuiScene()
@@ -25,22 +26,6 @@ kGuiScene::~kGuiScene()
 
 void kGuiScene::initialize( const QSize& gridSize )
 {
-	setSceneRect( QRect( QPoint( 0, 0 ), mGui->sizeHint() ) );
-	
-	qreal min = qMin( mGui->sizeHint().width(), mGui->sizeHint().height() ) *0.85;
-	qreal x = ( mGui->sizeHint().width() -min ) /2;
-	qreal y = ( mGui->sizeHint().height() -min ) /2;
-	QRectF bounds = kHelper::translatedRectXY( QRectF( QPointF( 0, 0 ), QSizeF( min, min ) ), x, y );
-	
-	mPanel = new kGuiScenePanel( bounds, gridSize, this );
-	mPanel->setPos( x, y );
-	
-	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
-	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
-	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
-	
-	addItem( mPanel );
-	
 	mGui->setFrameStyle( QFrame::NoFrame );
 	mGui->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	mGui->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -52,6 +37,23 @@ void kGuiScene::initialize( const QSize& gridSize )
 	mGui->setViewport( new QGLWidget( QGLFormat( QGL::SampleBuffers ) ) );
 #endif
 
+	setSceneRect( QRect( QPoint( 0, 0 ), mGui->sizeHint() ) );
 	mGui->setScene( this );
+	
+	qreal min = qMin( mGui->sizeHint().width(), mGui->sizeHint().height() ) *0.85;
+	qreal x = ( mGui->sizeHint().width() -min ) /2;
+	qreal y = ( mGui->sizeHint().height() -min ) /2;
+	QRectF bounds = kHelper::translatedRectXY( QRectF( QPointF( 0, 0 ), QSizeF( min, min ) ), x, y );
+	
+	mPanel = new kGuiScenePanel( bounds, gridSize, this );
+	mPanel->setPos( x, y );
+	
+	mPanel->initialize();
+	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
+	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
+	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
+	
+	addItem( mPanel );
+	
 	mPanel->setCurrentItem( QPoint(), false );
 }

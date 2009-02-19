@@ -25,10 +25,11 @@ int main(int argc, char ** argv)
 	kBoard board;
 	board.show();
 	*/
-	
+	/*
 	kXmppSettings settings("localhost", "guillaume", "localhost", "Home", "pouet");
 	KiessXmpp xmpp(settings);
 	xmpp.process();
+	*/
 
 	return qa.exec();
 }
