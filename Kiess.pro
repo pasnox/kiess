@@ -65,7 +65,8 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/gui/v2/kGui.h \
 	src/gui/v2/kGuiScene.h \
 	src/gui/v2/kGuiScenePanel.h \
-	src/gui/v2/kGuiScenePanelItem.h
+	src/gui/v2/kGuiScenePanelItem.h \
+	src/kHelper.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -81,7 +82,8 @@ SOURCES	= src/main.cpp \
 	src/gui/v2/kGui.cpp \
 	src/gui/v2/kGuiScene.cpp \
 	src/gui/v2/kGuiScenePanel.cpp \
-	src/gui/v2/kGuiScenePanelItem.cpp
+	src/gui/v2/kGuiScenePanelItem.cpp \
+	src/kHelper.cpp
 
 QT	= core gui network opengl
 RESOURCES	= src/resources/resources.qrc
@@ -91,4 +93,5 @@ FORMS	= src/gui/kPropertiesWidget.ui \
 	src/gui/kAboutWidget.ui
 INCLUDEPATH	= src/gui \
 	src/network \
-	src/board
+	src/board \
+	src

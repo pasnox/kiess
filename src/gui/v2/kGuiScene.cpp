@@ -5,6 +5,7 @@
 #include "kSingleWidget.h"
 #include "kPropertiesWidget.h"
 #include "kAboutWidget.h"
+#include "kHelper.h"
 
 #ifndef QT_NO_OPENGL
 #include <QtOpenGL>
@@ -24,12 +25,12 @@ kGuiScene::~kGuiScene()
 
 void kGuiScene::initialize( const QSize& gridSize )
 {
+	setSceneRect( QRect( QPoint( 0, 0 ), mGui->sizeHint() ) );
+	
 	qreal min = qMin( mGui->sizeHint().width(), mGui->sizeHint().height() ) *0.85;
 	qreal x = ( mGui->sizeHint().width() -min ) /2;
 	qreal y = ( mGui->sizeHint().height() -min ) /2;
-	QRectF bounds = QRectF( QPointF( 0, 0 ), QSizeF( min, min ) );
-	
-	setSceneRect( QRect( QPoint( 0, 0 ), mGui->sizeHint() ) );
+	QRectF bounds = kHelper::translatedRectXY( QRectF( QPointF( 0, 0 ), QSizeF( min, min ) ), x, y );
 	
 	mPanel = new kGuiScenePanel( bounds, gridSize, this );
 	mPanel->setPos( x, y );
