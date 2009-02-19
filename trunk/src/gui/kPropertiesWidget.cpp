@@ -1,5 +1,4 @@
 #include "kPropertiesWidget.h"
-#include "kPanel.h"
 
 kPropertiesWidget::kPropertiesWidget( kGuiScenePanel* panel )
 	: kEmbeddedWidget( panel )

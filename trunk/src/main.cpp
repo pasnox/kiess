@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-#include "gui/v2/kGui.h"
+#include "gui/kGui.h"
 #include "board/kBoard.h"
 #include "network/kiessxmpp.h"
 
