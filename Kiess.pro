@@ -53,8 +53,6 @@ CONFIG(debug, debug|release) {
 HEADERS	= src/network/kiessxmpp.h \
 	src/network/kiessxmppmechanism.h \
 	src/network/kXmppSettings.h \
-	src/gui/kPanel.h \
-	src/gui/kPanelItem.h \
 	src/gui/kPropertiesWidget.h \
 	src/gui/kEmbeddedWidget.h \
 	src/board/kBoardDef.h \
@@ -72,8 +70,6 @@ SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
 	src/network/kiessxmppmechanism.cpp \
 	src/network/kXmppSettings.cpp \
-	src/gui/kPanel.cpp \
-	src/gui/kPanelItem.cpp \
 	src/gui/kPropertiesWidget.cpp \
 	src/board/kBoard.cpp \
 	src/board/kCardItem.cpp \

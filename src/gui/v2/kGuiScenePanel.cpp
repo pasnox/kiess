@@ -13,8 +13,6 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	: QObject( parent ), QGraphicsRectItem( rect ),
 	mBrush( QColor( 226, 255, 92, 64 ) ),
 	mGridSize( gridSize ),
-	//mSelectionItemFactor( 0.1 ),
-	//mItemFactor( 0.15 ),
 	mSelectionTimeLine( 250, this ),
 	mFlipped( false ),
 	mFlipLeft( true ),
