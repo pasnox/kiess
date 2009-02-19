@@ -18,6 +18,7 @@ XUPProjectSettings {
 	EDITOR	= QMake
 	QT_VERSION	= Qt System (4.4.3)
 	EXECUTE_DEBUG	= bin/Kiess_debug
+	EXECUTE_RELEASE	= bin/Kiess.exe
 }
 
 TEMPLATE	= app
