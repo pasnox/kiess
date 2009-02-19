@@ -2,6 +2,8 @@
 #include <QDesktopWidget>
 
 #include "gui/kGui.h"
+#include "gui/kGuiScene.h"
+#include "gui/kGuiScenePanel.h"
 #include "board/kBoard.h"
 #include "network/kiessxmpp.h"
 
@@ -20,6 +22,7 @@ int main(int argc, char ** argv)
 	
 	// show game panel
 	gui.show();
+	//gui.scene()->panel()->setCurrentItem( QPoint(), false );
 	
 	/*
 	kBoard board;

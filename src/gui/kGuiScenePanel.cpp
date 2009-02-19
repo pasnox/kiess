@@ -20,24 +20,17 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	mRotationX = 0;
 	mRotationY = 0;
 	mFlipTimeLine = new QTimeLine( 500, this );
+	mSelectionItem = 0;
 	
-	connect( mSelectionTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( selectionTimeLineChanged( qreal ) ) );
-	connect( mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( flipTimeLineChanged( qreal ) ) );
-}
-
-kGuiScenePanel::~kGuiScenePanel()
-{
-}
-
-void kGuiScenePanel::initialize()
-{
-	QRectF rect = this->rect();
+	setZValue( 10 );
+	
 	qreal width = ( rect.width() /(qreal)mGridSize.width() );
 	qreal height = ( rect.height() /(qreal)mGridSize.height() );
 	
 	mSelectionItem = new kGuiScenePanelItem( kHelper::translatedRect( QRectF( 0, 0, width *0.8, height *0.8 ) ), Qt::gray );
 	mSelectionItem->setParentItem( this );
-	mSelectionItem->setZValue( -1 );
+	mSelectionItem->setPos( gridPosition( QPoint( 0, 0 ) ) );
+	mSelectionItem->setZValue( 15 );
 	
 	for ( int x = 0; x < mGridSize.width(); x++ )
 	{
@@ -48,12 +41,19 @@ void kGuiScenePanel::initialize()
 			item->setFlag( QGraphicsItem::ItemIsFocusable );
 			item->setPixmap( QPixmap( ":/gui/single.png" ) );
 			item->setPos( gridPosition( QPoint( x, y ) ) );
-			item->setZValue( 10 );
+			item->setZValue( 20 );
 			
 			mItems[ x ][ y ] = item;
 			connect( item, SIGNAL( activated() ), this, SLOT( flip() ) );
 		}
 	}
+	
+	connect( mSelectionTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( selectionTimeLineChanged( qreal ) ) );
+	connect( mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( flipTimeLineChanged( qreal ) ) );
+}
+
+kGuiScenePanel::~kGuiScenePanel()
+{
 }
 
 void kGuiScenePanel::paint( QPainter* painter, const QStyleOptionGraphicsItem* options, QWidget* widget )
@@ -107,6 +107,7 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 	{
 		mSelectionTimeLine->stop();
 		mSelectionStart = mSelectionItem->pos();
+		qWarning() << mSelectionItem->pos();
 		mSelectionEnd = gridPosition( pos );
 		mSelectionTimeLine->start();
 	}
@@ -121,6 +122,7 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 
 void kGuiScenePanel::flip()
 {
+return;
 	kGuiScenePanelItem* item = currentItem();
 	
 	if ( isAnimate() || ( item && item->isAnimate() ) )
@@ -218,9 +220,12 @@ void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
 void kGuiScenePanel::selectionTimeLineChanged( qreal value )
 {
+return;
 	QPointF newPos( mSelectionStart.x() +( mSelectionEnd -mSelectionStart ).x() *value, mSelectionStart.y() +( mSelectionEnd -mSelectionStart ).y() *value );
 	mSelectionItem->setPos( newPos );
 	selectionMoved( newPos );
+	
+	//qWarning() << mSelectionItem->pos();
 }
 
 void kGuiScenePanel::selectionMoved( const QPointF& pos )
@@ -245,6 +250,7 @@ return;
 
 void kGuiScenePanel::flipTimeLineChanged( qreal value )
 {
+return;
 	qreal finalxrot = mRotationX -mRotationX *value;
 	qreal finalyrot;
 	

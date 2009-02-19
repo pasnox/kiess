@@ -44,7 +44,6 @@ protected:
 	qreal mRotationX, mRotationY;
 	QTimeLine* mFlipTimeLine;
 	
-	void initialize();
 	QPointF gridPosition( const QPoint& pos ) const;
 	bool isKeyPad( QKeyEvent* event ) const;
 	void keyPressEvent( QKeyEvent* event );

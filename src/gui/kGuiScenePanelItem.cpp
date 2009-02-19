@@ -163,6 +163,7 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
 	if ( panel()->currentItem() != this || isAnimate() )
 	{
+	qWarning() << "return";
 		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
@@ -171,12 +172,14 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	{
 		if ( event->button() == Qt::RightButton )
 		{
+		qWarning() << "right";
 			mEmbeddedWidget->reject();
 			emit activated();
 			return;
 		}
 		else if ( event->button() == Qt::LeftButton )
 		{
+		qWarning() << "left";
 			mEmbeddedWidget->accept();
 			emit activated();
 			return;
@@ -185,10 +188,11 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	
 	if ( event->button() != Qt::LeftButton )
 	{
+	qWarning() << "! left";
 		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
-	
+	qWarning() << "animate";
 	mAnimationTimeLine->start();
 }
 
@@ -199,21 +203,21 @@ void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
 	qreal y = rect().center().y();
 	
 	QTransform transform;
-	transform.translate( x, y );
+	//transform.translate( x, y );
 	
 	// scale
 	if ( value <= 0.5 )
 	{
-		transform.scale( 1- ( 1 *value ), 1 -( 1 *value ) );
+		//transform.scale( 1- ( 1 *value ), 1 -( 1 *value ) );
 	}
 	else
 	{
-		transform.scale( 1 *value, 1 *value );
+		//transform.scale( 1 *value, 1 *value );
 	}
 	
 	// rotation
 	transform.rotate( 360 *value, Qt::ZAxis );
 	
-	transform.translate( -x, -y );
+	//transform.translate( -x, -y );
 	setTransform( transform );
 }
