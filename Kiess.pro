@@ -60,10 +60,10 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/board/kCardItem.h \
 	src/gui/kSingleWidget.h \
 	src/gui/kAboutWidget.h \
-	src/gui/v2/kGui.h \
-	src/gui/v2/kGuiScene.h \
-	src/gui/v2/kGuiScenePanel.h \
-	src/gui/v2/kGuiScenePanelItem.h \
+	src/gui/kGui.h \
+	src/gui/kGuiScene.h \
+	src/gui/kGuiScenePanel.h \
+	src/gui/kGuiScenePanelItem.h \
 	src/kHelper.h
 
 SOURCES	= src/main.cpp \
@@ -75,10 +75,10 @@ SOURCES	= src/main.cpp \
 	src/board/kCardItem.cpp \
 	src/gui/kSingleWidget.cpp \
 	src/gui/kAboutWidget.cpp \
-	src/gui/v2/kGui.cpp \
-	src/gui/v2/kGuiScene.cpp \
-	src/gui/v2/kGuiScenePanel.cpp \
-	src/gui/v2/kGuiScenePanelItem.cpp \
+	src/gui/kGui.cpp \
+	src/gui/kGuiScene.cpp \
+	src/gui/kGuiScenePanel.cpp \
+	src/gui/kGuiScenePanelItem.cpp \
 	src/kHelper.cpp
 
 QT	= core gui network opengl
