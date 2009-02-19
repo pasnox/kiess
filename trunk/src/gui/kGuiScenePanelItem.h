@@ -33,7 +33,7 @@ public:
 protected:
 	QBrush mBrush;
 	QPixmap mPixmap;
-	QTimeLine mAnimationTimeLine;
+	QTimeLine* mAnimationTimeLine;
 	qreal mLastVal;
 	qreal mOpacity;
 	kEmbeddedWidget* mEmbeddedWidget;

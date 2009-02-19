@@ -11,6 +11,7 @@ class kGuiScenePanelItem;
 class kGuiScenePanel : public QObject, public QGraphicsRectItem
 {
 	Q_OBJECT
+	friend class kGuiScene;
 	
 public:
 	kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObject* parent = 0 );
@@ -32,10 +33,8 @@ public slots:
 protected:
 	QBrush mBrush;
 	QSize mGridSize;
-//	qreal mSelectionItemFactorf;
-//	qreal mItemFactorf;
 	QMap<int, QMap<int, kGuiScenePanelItem*> > mItems;
-	QTimeLine mSelectionTimeLine;
+	QTimeLine* mSelectionTimeLine;
 	QPoint mSelectedPos;
 	QPointF mSelectionStart;
 	QPointF mSelectionEnd;
@@ -43,8 +42,9 @@ protected:
 	bool mFlipped;
 	bool mFlipLeft;
 	qreal mRotationX, mRotationY;
-	QTimeLine mFlipTimeLine;
+	QTimeLine* mFlipTimeLine;
 	
+	void initialize();
 	QPointF gridPosition( const QPoint& pos ) const;
 	bool isKeyPad( QKeyEvent* event ) const;
 	void keyPressEvent( QKeyEvent* event );

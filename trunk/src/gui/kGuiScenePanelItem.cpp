@@ -10,15 +10,16 @@
 #include <QDebug>
 
 kGuiScenePanelItem::kGuiScenePanelItem( const QRectF& rect, const QBrush& brush, kEmbeddedWidget* embeddedWidget )
-	: QObject( 0 ), QGraphicsRectItem( rect ),
-	mBrush( brush ),
-	mAnimationTimeLine( 750, this ),
-	mLastVal( 0 ),
-	mOpacity( 1 ),
-	mEmbeddedWidget( embeddedWidget )
+	: QObject( 0 ), QGraphicsRectItem( rect )
 {
-	connect( &mAnimationTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( animationTimeLineChanged( qreal ) ) );
-	connect( &mAnimationTimeLine, SIGNAL( finished() ), this, SIGNAL( activated() ) );
+	mBrush = brush;
+	mAnimationTimeLine = new QTimeLine( 750, this );
+	mLastVal = 0;
+	mOpacity = 1;
+	mEmbeddedWidget = embeddedWidget;
+	
+	connect( mAnimationTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( animationTimeLineChanged( qreal ) ) );
+	connect( mAnimationTimeLine, SIGNAL( finished() ), this, SIGNAL( activated() ) );
 }
 
 kGuiScenePanelItem::~kGuiScenePanelItem()
@@ -68,11 +69,12 @@ void kGuiScenePanelItem::paint( QPainter* painter, const QStyleOptionGraphicsIte
 
 	painter->setPen(QPen(Qt::black, 1));
 	painter->drawRoundRect(rect());
-	
+	/*
 	if (!mPixmap.isNull()) {
 		painter->scale(1.95, 1.95);
 		painter->drawPixmap(mPixmap.width() / 2, mPixmap.height() / 2, mPixmap);
 	}
+	*/
 }
 
 QRectF kGuiScenePanelItem::boundingRect() const
@@ -121,7 +123,7 @@ kGuiScenePanel* kGuiScenePanelItem::panel() const
 
 bool kGuiScenePanelItem::isAnimate() const
 {
-	return mAnimationTimeLine.state() == QTimeLine::Running;
+	return mAnimationTimeLine->state() == QTimeLine::Running;
 }
 
 void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
@@ -154,7 +156,7 @@ void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 		return;
 	}
 	
-	mAnimationTimeLine.start();
+	mAnimationTimeLine->start();
 }
 
 void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
@@ -187,7 +189,7 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 		return;
 	}
 	
-	mAnimationTimeLine.start();
+	mAnimationTimeLine->start();
 }
 
 void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
