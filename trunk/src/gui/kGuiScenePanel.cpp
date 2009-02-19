@@ -101,13 +101,15 @@ kGuiScenePanelItem* kGuiScenePanel::currentItem() const
 
 void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 {
+	qWarning() << "from" << currentItem()->pos() << " go to  " << item( pos )->pos();
+	
 	item( pos )->setFocus();
+	mSelectedPos = pos;
 	
 	if ( animate )
 	{
 		mSelectionTimeLine->stop();
 		mSelectionStart = mSelectionItem->pos();
-		qWarning() << mSelectionItem->pos();
 		mSelectionEnd = gridPosition( pos );
 		mSelectionTimeLine->start();
 	}
@@ -179,10 +181,11 @@ void kGuiScenePanel::keyPressEvent( QKeyEvent* event )
 		return;
 	}
 	
-	mSelectedPos.rx() = ( mSelectedPos.x() +mGridSize.width() +( event->key() == Qt::Key_Right ) -( event->key() == Qt::Key_Left ) ) %mGridSize.width();
-	mSelectedPos.ry() = ( mSelectedPos.y() +mGridSize.height() +( event->key() == Qt::Key_Down ) -( event->key() == Qt::Key_Up ) ) %mGridSize.height();
+	QPoint newPos;
+	newPos.rx() = ( mSelectedPos.x() +mGridSize.width() +( event->key() == Qt::Key_Right ) -( event->key() == Qt::Key_Left ) ) %mGridSize.width();
+	newPos.ry() = ( mSelectedPos.y() +mGridSize.height() +( event->key() == Qt::Key_Down ) -( event->key() == Qt::Key_Up ) ) %mGridSize.height();
 	
-	setCurrentItem( mSelectedPos, true );
+	setCurrentItem( newPos, true );
 }
 
 void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
@@ -209,8 +212,7 @@ void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 		
 		if ( newPos != mSelectedPos )
 		{
-			mSelectedPos = newPos;
-			setCurrentItem( mSelectedPos, true );
+			setCurrentItem( newPos, true );
 			return;
 		}
 	}
@@ -220,12 +222,11 @@ void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
 void kGuiScenePanel::selectionTimeLineChanged( qreal value )
 {
-return;
 	QPointF newPos( mSelectionStart.x() +( mSelectionEnd -mSelectionStart ).x() *value, mSelectionStart.y() +( mSelectionEnd -mSelectionStart ).y() *value );
 	mSelectionItem->setPos( newPos );
-	selectionMoved( newPos );
+	//selectionMoved( newPos );
 	
-	//qWarning() << mSelectionItem->pos();
+	//qWarning() << "moved to " << newPos << " real " << mSelectionItem->pos();
 }
 
 void kGuiScenePanel::selectionMoved( const QPointF& pos )

@@ -128,6 +128,9 @@ bool kGuiScenePanelItem::isAnimate() const
 
 void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 {
+	QGraphicsRectItem::keyPressEvent( event );
+	return;
+	
 	if ( panel()->currentItem() != this || isAnimate() )
 	{
 		QGraphicsRectItem::keyPressEvent( event );
@@ -161,6 +164,9 @@ void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 
 void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
+	QGraphicsRectItem::mousePressEvent( event );
+	return;
+	
 	if ( panel()->currentItem() != this || isAnimate() )
 	{
 	qWarning() << "return";
@@ -199,25 +205,20 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 void kGuiScenePanelItem::animationTimeLineChanged( qreal value )
 {
 	mLastVal = value;
-	qreal x = rect().center().x();
-	qreal y = rect().center().y();
-	
 	QTransform transform;
-	//transform.translate( x, y );
 	
 	// scale
 	if ( value <= 0.5 )
 	{
-		//transform.scale( 1- ( 1 *value ), 1 -( 1 *value ) );
+		transform.scale( 1- ( 1 *value ), 1 -( 1 *value ) );
 	}
 	else
 	{
-		//transform.scale( 1 *value, 1 *value );
+		transform.scale( 1 *value, 1 *value );
 	}
 	
 	// rotation
 	transform.rotate( 360 *value, Qt::ZAxis );
 	
-	//transform.translate( -x, -y );
 	setTransform( transform );
 }
