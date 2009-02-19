@@ -19,7 +19,7 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 	mRotationX( 0 ),
 	mRotationY( 0 ),
 	mFlipTimeLine( 500, this )
-{	
+{
 	qreal width = ( rect.width() /(qreal)mGridSize.width() );
 	qreal height = ( rect.height() /(qreal)mGridSize.height() );
 	
@@ -37,6 +37,8 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 			item->setPixmap( QPixmap( ":/gui/single.png" ) );
 			item->setPos( gridPosition( QPoint( x, y ) ) );
 			item->setZValue( 10 );
+			
+			qWarning() << item->pos() << item->rect();
 			
 			mItems[ x ][ y ] = item;
 			connect( item, SIGNAL( activated() ), this, SLOT( flip() ) );

@@ -32,8 +32,8 @@ public slots:
 protected:
 	QBrush mBrush;
 	QSize mGridSize;
-	qreal mSelectionItemFactorf;
-	qreal mItemFactorf;
+//	qreal mSelectionItemFactorf;
+//	qreal mItemFactorf;
 	QMap<int, QMap<int, kGuiScenePanelItem*> > mItems;
 	QTimeLine mSelectionTimeLine;
 	QPoint mSelectedPos;
