@@ -164,7 +164,7 @@ void kCardItem::updateValue( qreal value )
 	//rotate card
 	if (_mViewMode == ViewMode::VIEW3D) {
 		QTransform transform;
-		transform.rotate(-50, Qt::XAxis); //perspective view
+		transform.rotate(-60, Qt::XAxis); //perspective view
 		transform.translate(0, -rect().height());
 		transform.rotate((value * -130), Qt::XAxis  );
 		setTransform(transform);
@@ -207,7 +207,7 @@ void kCardItem::setViewMode( const ViewMode::BoardViewMode& mode )
 	_mViewMode = mode;
 	if (_mViewMode == ViewMode::VIEW3D) {
 		QTransform transform;
-		transform.rotate(-50, Qt::XAxis); //perspective view
+		transform.rotate(-60, Qt::XAxis); //perspective view
 		setTransform(transform);
 	}
 }
