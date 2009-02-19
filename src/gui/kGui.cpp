@@ -42,9 +42,11 @@ kGui::kGui( QWidget* parent )
 	mPanel->setPos( x, y );
 	
 	// init panel items widget
+	/*
 	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
 	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
 	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
+	*/
 	
 	// set scene
 	setScene( mScene );

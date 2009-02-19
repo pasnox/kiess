@@ -15,7 +15,7 @@ kGuiScenePanelItem::kGuiScenePanelItem( const QRectF& rect, const QBrush& brush,
 	mBrush = brush;
 	mAnimationTimeLine = new QTimeLine( 750, this );
 	mLastVal = 0;
-	mOpacity = 1;
+	mOpacity = 0.6;
 	mEmbeddedWidget = embeddedWidget;
 	
 	connect( mAnimationTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( animationTimeLineChanged( qreal ) ) );
@@ -69,12 +69,11 @@ void kGuiScenePanelItem::paint( QPainter* painter, const QStyleOptionGraphicsIte
 
 	painter->setPen(QPen(Qt::black, 1));
 	painter->drawRoundRect(rect());
-	/*
+	
 	if (!mPixmap.isNull()) {
 		painter->scale(1.95, 1.95);
 		painter->drawPixmap(mPixmap.width() / 2, mPixmap.height() / 2, mPixmap);
 	}
-	*/
 }
 
 QRectF kGuiScenePanelItem::boundingRect() const
@@ -106,8 +105,7 @@ kEmbeddedWidget* kGuiScenePanelItem::widget() const
 
 qreal kGuiScenePanelItem::opacity() const
 {
-	kGuiScenePanelItem* parent = parentItem() ? static_cast<kGuiScenePanelItem*>( parentItem() ) : 0;
-	return mOpacity +( parent ? parent->opacity() : 0 );
+	return mOpacity;
 }
 
 void kGuiScenePanelItem::setOpacity( qreal opacity )
@@ -128,9 +126,6 @@ bool kGuiScenePanelItem::isAnimate() const
 
 void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 {
-	QGraphicsRectItem::keyPressEvent( event );
-	return;
-	
 	if ( panel()->currentItem() != this || isAnimate() )
 	{
 		QGraphicsRectItem::keyPressEvent( event );
@@ -164,12 +159,8 @@ void kGuiScenePanelItem::keyPressEvent( QKeyEvent* event )
 
 void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
-	QGraphicsRectItem::mousePressEvent( event );
-	return;
-	
 	if ( panel()->currentItem() != this || isAnimate() )
 	{
-	qWarning() << "return";
 		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
@@ -178,14 +169,12 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	{
 		if ( event->button() == Qt::RightButton )
 		{
-		qWarning() << "right";
 			mEmbeddedWidget->reject();
 			emit activated();
 			return;
 		}
 		else if ( event->button() == Qt::LeftButton )
 		{
-		qWarning() << "left";
 			mEmbeddedWidget->accept();
 			emit activated();
 			return;
@@ -194,11 +183,10 @@ void kGuiScenePanelItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	
 	if ( event->button() != Qt::LeftButton )
 	{
-	qWarning() << "! left";
 		QGraphicsRectItem::mousePressEvent( event );
 		return;
 	}
-	qWarning() << "animate";
+	
 	mAnimationTimeLine->start();
 }
 

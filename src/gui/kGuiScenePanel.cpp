@@ -100,9 +100,7 @@ kGuiScenePanelItem* kGuiScenePanel::currentItem() const
 }
 
 void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
-{
-	qWarning() << "from" << currentItem()->pos() << " go to  " << item( pos )->pos();
-	
+{	
 	item( pos )->setFocus();
 	mSelectedPos = pos;
 	
@@ -124,7 +122,6 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 
 void kGuiScenePanel::flip()
 {
-return;
 	kGuiScenePanelItem* item = currentItem();
 	
 	if ( isAnimate() || ( item && item->isAnimate() ) )
@@ -202,7 +199,9 @@ void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 			{
 				kGuiScenePanelItem* item = mItems[ x ][ y ];
 				
-				if ( item->contains( item->mapFromScene( event->scenePos() ) ) )
+				QPointF mappedPos = item->mapFromScene( event->scenePos() );
+				
+				if ( item->contains( mappedPos ) )
 				{
 					newPos = QPoint( x, y );
 					break;
@@ -224,9 +223,7 @@ void kGuiScenePanel::selectionTimeLineChanged( qreal value )
 {
 	QPointF newPos( mSelectionStart.x() +( mSelectionEnd -mSelectionStart ).x() *value, mSelectionStart.y() +( mSelectionEnd -mSelectionStart ).y() *value );
 	mSelectionItem->setPos( newPos );
-	//selectionMoved( newPos );
-	
-	//qWarning() << "moved to " << newPos << " real " << mSelectionItem->pos();
+	selectionMoved( newPos );
 }
 
 void kGuiScenePanel::selectionMoved( const QPointF& pos )
