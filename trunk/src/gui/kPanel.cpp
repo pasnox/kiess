@@ -31,6 +31,8 @@ kPanel::kPanel( QWidget* parent )
 
 	// area bound
 	QRectF bounds( ( -mGridSize.width() /2.0 ) *mFactor, ( -mGridSize.height() /2.0 ) *mFactor, mGridSize.width() *mFactor, mGridSize.height() *mFactor );
+	
+	qWarning() << bounds;
 
 	// scene
 	mScene = new QGraphicsScene( bounds, this );

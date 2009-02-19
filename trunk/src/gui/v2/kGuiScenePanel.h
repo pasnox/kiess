@@ -32,8 +32,8 @@ public slots:
 protected:
 	QBrush mBrush;
 	QSize mGridSize;
-	qreal mSelectionItemFactor;
-	qreal mItemFactor;
+	//qreal mSelectionItemFactor;
+	//qreal mItemFactor;
 	QMap<int, QMap<int, kGuiScenePanelItem*> > mItems;
 	QTimeLine mSelectionTimeLine;
 	QPoint mSelectedPos;
@@ -45,7 +45,7 @@ protected:
 	qreal mRotationX, mRotationY;
 	QTimeLine mFlipTimeLine;
 	
-	QPointF gridPosition( const QPoint& pos, qreal factor ) const;
+	QPointF gridPosition( const QPoint& pos ) const;
 	bool isKeyPad( QKeyEvent* event ) const;
 	void keyPressEvent( QKeyEvent* event );
 	void mousePressEvent( QGraphicsSceneMouseEvent* event );

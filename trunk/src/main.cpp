@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
 {
 	QApplication qa( argc, argv );
 	
-	
+	/*
 	// create game panel
 	kPanel panel;
 	panel.setWindowTitle( "Kiess v0 - Kiess Team" );
@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
 	
 	// show game panel
 	panel.show();
-	
+	*/
 	
 	/*
 	kBoard board;
