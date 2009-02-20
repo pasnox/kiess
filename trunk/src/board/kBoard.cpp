@@ -130,12 +130,9 @@ void kBoard::createScene()
 	//In 3D Mode, the item container is rotate for a perspective view
 	if (_mboardViewMode == ViewMode::VIEW3D) {
 		QTransform transform;
+		//perspective
 		transform.rotate(70, Qt::XAxis);
 		transform.scale(0.8, 1.5);
-		//perspective
-		transform.rotate(45, Qt::XAxis);
-		//scale to minimize the with and maximize the height
-		transform.scale(0.8, 1.2);
 		//translate to render the item so far
 		transform.translate(0, -100);
 		_mContainerItem->setTransform(transform);
@@ -168,7 +165,7 @@ void kBoard::initBoardParameters()
 #endif
 
 	//View mode (2D / 3D)
-	 _mboardViewMode = ViewMode::VIEW3D;
+	 _mboardViewMode = ViewMode::VIEW2D;
 }
 
 
