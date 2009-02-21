@@ -61,11 +61,14 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="dbbButtons" >
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
-  <zorder>cbSound</zorder>
-  <zorder>cbAnimation</zorder>
-  <zorder>cbFullScreen</zorder>
-  <zorder>gbProperties</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -76,7 +79,40 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>dbbButtons</sender>
+   <signal>accepted()</signal>
+   <receiver>kPropertiesWidget</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>156</x>
+     <y>225</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>154</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dbbButtons</sender>
+   <signal>rejected()</signal>
+   <receiver>kPropertiesWidget</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>187</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>185</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>accept()</slot>
   <slot>reject()</slot>

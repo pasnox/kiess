@@ -39,9 +39,11 @@ void kPropertiesWidget::saveDatas()
 
 void kPropertiesWidget::reject()
 {
+	emit rejected();
 }
 
 void kPropertiesWidget::accept()
 {
 	saveDatas();
+	emit accepted();
 }

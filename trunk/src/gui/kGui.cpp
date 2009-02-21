@@ -39,14 +39,21 @@ kGui::kGui( QWidget* parent )
 	QRectF bounds = kHelper::translatedRectXY( QRectF( QPointF( 0, 0 ), QSizeF( min, min ) ), x, y );
 	
 	kGuiScenePanel* mPanel = new kGuiScenePanel( bounds, QSize( 2, 2 ), mScene );
+	mPanel->setCurrentItem( QPoint(), false );
 	mPanel->setPos( x, y );
 	
 	// init panel items widget
-	/*
+	// single player game
+	mPanel->item( QPoint( 0, 0 ) )->setPixmap( QPixmap( ":/gui/single.png" ) );
 	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
+	// team player game
+	mPanel->item( QPoint( 1, 0 ) )->setPixmap( QPixmap( ":/gui/team.png" ) );
+	// properties
+	mPanel->item( QPoint( 0, 1 ) )->setPixmap( QPixmap( ":/gui/properties.png" ) );
 	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
+	// about
+	mPanel->item( QPoint( 1, 1 ) )->setPixmap( QPixmap( ":/gui/about.png" ) );
 	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
-	*/
 	
 	// set scene
 	setScene( mScene );

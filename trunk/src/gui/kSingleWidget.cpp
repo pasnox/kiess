@@ -20,9 +20,11 @@ void kSingleWidget::saveDatas()
 
 void kSingleWidget::reject()
 {
+	emit rejected();
 }
 
 void kSingleWidget::accept()
 {
 	saveDatas();
+	emit accepted();
 }

@@ -34,7 +34,7 @@ protected:
 	QBrush mBrush;
 	QSize mGridSize;
 	QMap<int, QMap<int, kGuiScenePanelItem*> > mItems;
-	QTimeLine* mSelectionTimeLine;
+	QTimeLine mSelectionTimeLine;
 	QPoint mSelectedPos;
 	QPointF mSelectionStart;
 	QPointF mSelectionEnd;
@@ -42,18 +42,20 @@ protected:
 	bool mFlipped;
 	bool mFlipLeft;
 	qreal mRotationX, mRotationY;
-	QTimeLine* mFlipTimeLine;
+	QTimeLine mFlipTimeLine;
+	kGuiScenePanelItem* mFlippedItem;
 	
 	QPointF gridPosition( const QPoint& pos ) const;
-	bool isKeyPad( QKeyEvent* event ) const;
-	void keyPressEvent( QKeyEvent* event );
 	void mousePressEvent( QGraphicsSceneMouseEvent* event );
 
 protected slots:
 	void selectionTimeLineChanged( qreal value );
-	void selectionMoved( const QPointF& pos );
+	void selectionMoved( const QPointF& newPos );
 	
 	void flipTimeLineChanged( qreal value );
+	
+	void item_rejected();
+	void item_accepted();
 };
 
 #endif // KGUISCENEPANEL_H

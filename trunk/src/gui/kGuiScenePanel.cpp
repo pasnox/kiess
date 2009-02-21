@@ -10,27 +10,27 @@
 #include <math.h>
 
 kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObject* parent )
-	: QObject( parent ), QGraphicsRectItem( rect )
-{
-	mBrush = QColor( 226, 255, 92, 64 );
-	mGridSize = gridSize;
-	mSelectionTimeLine = new QTimeLine( 250, this );
-	mFlipped = false;
-	mFlipLeft = true;
-	mRotationX = 0;
-	mRotationY = 0;
-	mFlipTimeLine = new QTimeLine( 500, this );
-	mSelectionItem = 0;
-	
-	setZValue( 10 );
-	
+	: QObject( parent ), QGraphicsRectItem( rect ),
+	mBrush( QColor( 226, 255, 92, 64 ) ),
+	mGridSize( gridSize ),
+	mSelectionTimeLine( 250, this ),
+	mFlipped( false ),
+	mFlipLeft( true ),
+	mRotationX( 0 ),
+	mRotationY( 0 ),
+	mFlipTimeLine( 500, this )
+{	
 	qreal width = ( rect.width() /(qreal)mGridSize.width() );
 	qreal height = ( rect.height() /(qreal)mGridSize.height() );
 	
 	mSelectionItem = new kGuiScenePanelItem( kHelper::translatedRect( QRectF( 0, 0, width *0.8, height *0.8 ) ), Qt::gray );
 	mSelectionItem->setParentItem( this );
 	mSelectionItem->setPos( gridPosition( QPoint( 0, 0 ) ) );
-	mSelectionItem->setZValue( 15 );
+	mSelectionItem->setZValue( -1 );
+	
+	mFlippedItem = new kGuiScenePanelItem( kHelper::translatedRect( rect ), Qt::gray );
+	mFlippedItem->setParentItem( this );
+	mFlippedItem->setTransform( QTransform().rotate( 180, Qt::YAxis ) );
 	
 	for ( int x = 0; x < mGridSize.width(); x++ )
 	{
@@ -39,17 +39,16 @@ kGuiScenePanel::kGuiScenePanel( const QRectF& rect, const QSize& gridSize, QObje
 			kGuiScenePanelItem* item = new kGuiScenePanelItem( kHelper::translatedRect( QRectF( 0, 0, width *0.7, height *0.7 ) ), QColor( 214, 240, 110, 128 ) );
 			item->setParentItem( this );
 			item->setFlag( QGraphicsItem::ItemIsFocusable );
-			item->setPixmap( QPixmap( ":/gui/single.png" ) );
 			item->setPos( gridPosition( QPoint( x, y ) ) );
-			item->setZValue( 20 );
 			
 			mItems[ x ][ y ] = item;
 			connect( item, SIGNAL( activated() ), this, SLOT( flip() ) );
 		}
 	}
 	
-	connect( mSelectionTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( selectionTimeLineChanged( qreal ) ) );
-	connect( mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( flipTimeLineChanged( qreal ) ) );
+	connect( mFlippedItem, SIGNAL( activated() ), this, SLOT( flip() ) );
+	connect( &mSelectionTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( selectionTimeLineChanged( qreal ) ) );
+	connect( &mFlipTimeLine, SIGNAL( valueChanged( qreal ) ), this, SLOT( flipTimeLineChanged( qreal ) ) );
 }
 
 kGuiScenePanel::~kGuiScenePanel()
@@ -86,7 +85,7 @@ kGuiScenePanelItem* kGuiScenePanel::item( const QPoint& pos ) const
 
 bool kGuiScenePanel::isAnimate() const
 {
-	return mSelectionTimeLine->state() == QTimeLine::Running;
+	return mSelectionTimeLine.state() == QTimeLine::Running;
 }
 
 bool kGuiScenePanel::isFlipped() const
@@ -106,14 +105,14 @@ void kGuiScenePanel::setCurrentItem( const QPoint& pos, bool animate )
 	
 	if ( animate )
 	{
-		mSelectionTimeLine->stop();
+		mSelectionTimeLine.stop();
 		mSelectionStart = mSelectionItem->pos();
 		mSelectionEnd = gridPosition( pos );
-		mSelectionTimeLine->start();
+		mSelectionTimeLine.start();
 	}
 	else
 	{
-		mSelectionTimeLine->stop();
+		mSelectionTimeLine.stop();
 		mSelectionItem->setPos( gridPosition( pos ) );
 		mSelectionStart = mSelectionItem->pos();
 		selectionMoved( mSelectionStart );
@@ -129,29 +128,25 @@ void kGuiScenePanel::flip()
 		return;
 	}
 
-	if ( mFlipTimeLine->currentValue() == 0 )
+	if ( mFlipTimeLine.currentValue() == 0 )
 	{
 		kEmbeddedWidget* widget = item->widget();
 		
 		if ( widget )
 		{
-			widget->loadDatas();
-			//mBackItem->setWidget( widget );
-			//mBackItem->setVisible( true );
+			mFlippedItem->loadWidget( widget );
 			
 			mFlipped = true;
 			mFlipLeft = mSelectionItem->pos().x() < 0;
-			mFlipTimeLine->setDirection( QTimeLine::Forward );
-			mFlipTimeLine->start();
+			mFlipTimeLine.setDirection( QTimeLine::Forward );
+			mFlipTimeLine.start();
 		}
 	}
 	else
 	{
-		//mBackItem->setVisible( true );
-		
 		mFlipped = false;
-		mFlipTimeLine->setDirection( QTimeLine::Backward );
-		mFlipTimeLine->start();
+		mFlipTimeLine.setDirection( QTimeLine::Backward );
+		mFlipTimeLine.start();
 	}
 }
 
@@ -163,56 +158,50 @@ QPointF kGuiScenePanel::gridPosition( const QPoint& pos ) const
 	return QPointF( p.x() +( s.width() *pos.x() ), p.y() +( s.height() *pos.y() ) );
 }
 
-bool kGuiScenePanel::isKeyPad( QKeyEvent* event ) const
-{
-	return event->key() == Qt::Key_Right || event->key() == Qt::Key_Left || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down;
-}
-
-void kGuiScenePanel::keyPressEvent( QKeyEvent* event )
-{
-	kGuiScenePanelItem* it = currentItem();
-	
-	if ( !isKeyPad( event ) || ( it && it->isAnimate() ) )
-	{
-		QGraphicsRectItem::keyPressEvent( event );
-		return;
-	}
-	
-	QPoint newPos;
-	newPos.rx() = ( mSelectedPos.x() +mGridSize.width() +( event->key() == Qt::Key_Right ) -( event->key() == Qt::Key_Left ) ) %mGridSize.width();
-	newPos.ry() = ( mSelectedPos.y() +mGridSize.height() +( event->key() == Qt::Key_Down ) -( event->key() == Qt::Key_Up ) ) %mGridSize.height();
-	
-	setCurrentItem( newPos, true );
-}
-
 void kGuiScenePanel::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
 	kGuiScenePanelItem* it = currentItem();
 	
-	if ( ( !it || ( it && !it->isAnimate() ) ) && ( event->modifiers() == Qt::NoModifier && event->button() == Qt::LeftButton ) )
+	if ( ( !it || ( it && !it->isAnimate() ) ) && !isAnimate() && event->modifiers() == Qt::NoModifier )
 	{
-		QPoint newPos = mSelectedPos;
-		
-		foreach ( const int& x, mItems.keys() )
+		if ( isFlipped() )
 		{
-			foreach ( const int& y, mItems[ x ].keys() )
+		}
+		else
+		{
+			if (  event->button() == Qt::LeftButton )
 			{
-				kGuiScenePanelItem* item = mItems[ x ][ y ];
+				QPoint newPos = mSelectedPos;
+				bool found = false;
 				
-				QPointF mappedPos = item->mapFromScene( event->scenePos() );
-				
-				if ( item->contains( mappedPos ) )
+				foreach ( const int& x, mItems.keys() )
 				{
-					newPos = QPoint( x, y );
-					break;
+					foreach ( const int& y, mItems[ x ].keys() )
+					{
+						kGuiScenePanelItem* item = mItems[ x ][ y ];
+						
+						QPointF mappedPos = item->mapFromScene( event->scenePos() );
+						
+						if ( item->contains( mappedPos ) )
+						{
+							newPos = QPoint( x, y );
+							found = true;
+							break;
+						}
+					}
+				}
+				
+				if ( found && newPos != mSelectedPos )
+				{
+					setCurrentItem( newPos, true );
+					return;
+				}
+				else if ( found )
+				{
+					it->activate();
+					return;
 				}
 			}
-		}
-		
-		if ( newPos != mSelectedPos )
-		{
-			setCurrentItem( newPos, true );
-			return;
 		}
 	}
 	
@@ -226,29 +215,18 @@ void kGuiScenePanel::selectionTimeLineChanged( qreal value )
 	selectionMoved( newPos );
 }
 
-void kGuiScenePanel::selectionMoved( const QPointF& pos )
+void kGuiScenePanel::selectionMoved( const QPointF& newPos )
 {
-return;
-	QSizeF s = currentItem()->rect().size() /2;
-	qreal x = rect().center().x();
-	qreal y = rect().center().y();
 	QTransform transform;
-	
-	qreal g = 6.0;
-	mRotationY = ( pos.x() -s.width() ) /g;
-	mRotationX = ( pos.y() -s.height() ) /g;
-	
-	transform.translate( x, y );
-	transform.rotate( mRotationY, Qt::YAxis );
-	transform.rotate( mRotationX, Qt::XAxis );
-	transform.translate( -x, -y );
-	
+	mRotationY = newPos.x() /8.0;
+	mRotationX = newPos.y() /8.0;
+	transform.rotate( newPos.x() /8.0, Qt::YAxis );
+	transform.rotate( newPos.y() /8.0, Qt::XAxis );
 	setTransform( transform );
 }
 
 void kGuiScenePanel::flipTimeLineChanged( qreal value )
 {
-return;
 	qreal finalxrot = mRotationX -mRotationX *value;
 	qreal finalyrot;
 	
@@ -264,13 +242,22 @@ return;
 	QTransform transform;
 	transform.rotate( finalyrot, Qt::YAxis );
 	transform.rotate( finalxrot, Qt::XAxis );
-	qreal scale = 1 -sin( M_PI *value ) *0.6;
+	qreal scale = 1 -sin( M_PI *value ) *0.3;
 	transform.scale( scale, scale );
 	setTransform( transform );
 	
 	if ( value == 0 )
 	{
-		//mBackItem->setVisible( false );
 		currentItem()->setFocus();
 	}
+}
+
+void kGuiScenePanel::item_rejected()
+{
+	mFlippedItem->unloadWidget();
+}
+
+void kGuiScenePanel::item_accepted()
+{
+	mFlippedItem->unloadWidget();
 }

@@ -174,7 +174,7 @@
         <x>0</x>
         <y>0</y>
         <width>337</width>
-        <height>177</height>
+        <height>148</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -204,6 +204,13 @@
      </widget>
     </widget>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="dbbButtons" >
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -217,7 +224,24 @@
  <resources>
   <include location="../resources/resources.qrc" />
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>dbbButtons</sender>
+   <signal>accepted()</signal>
+   <receiver>kAboutWidget</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>109</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>109</x>
+     <y>269</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>accept()</slot>
   <slot>reject()</slot>
