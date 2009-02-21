@@ -7,6 +7,7 @@
 
 class kEmbeddedWidget;
 class kGuiScenePanel;
+class QGraphicsProxyWidget;
 
 class kGuiScenePanelItem : public QObject, public QGraphicsRectItem
 {
@@ -23,23 +24,22 @@ public:
 	
 	void setWidget( kEmbeddedWidget* widget );
 	kEmbeddedWidget* widget() const;
-
-	qreal opacity() const;
-	void setOpacity( qreal opacity );
+	
+	void loadWidget( kEmbeddedWidget* widget );
+	void unloadWidget();
 	
 	kGuiScenePanel* panel() const;
 	bool isAnimate() const;
+	
+	void activate();
 
 protected:
 	QBrush mBrush;
 	QPixmap mPixmap;
-	QTimeLine* mAnimationTimeLine;
+	QTimeLine mAnimationTimeLine;
 	qreal mLastVal;
-	qreal mOpacity;
 	kEmbeddedWidget* mEmbeddedWidget;
-	
-	void keyPressEvent( QKeyEvent* event );
-	void mousePressEvent( QGraphicsSceneMouseEvent* event );
+	QGraphicsProxyWidget* mProxyWidget;
 
 private slots:
 	void animationTimeLineChanged( qreal value );

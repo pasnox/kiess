@@ -17,7 +17,7 @@ kAboutWidget::~kAboutWidget()
 
 void kAboutWidget::loadDatas()
 {
-	QString html = "<p style=\"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans'; font-size:8px; font-weight:440; font-style:normal;\">\n";
+	QString html;
 	
 	foreach ( const AboutIdentity& identity, mAboutIdentities )
 	{
@@ -31,8 +31,6 @@ void kAboutWidget::loadDatas()
 		}
 	}
 	
-	html += "</p>\n";
-	
 	lInformations->setText( html );
 }
 
@@ -42,8 +40,10 @@ void kAboutWidget::saveDatas()
 
 void kAboutWidget::reject()
 {
+	emit rejected();
 }
 
 void kAboutWidget::accept()
 {
+	emit accepted();
 }

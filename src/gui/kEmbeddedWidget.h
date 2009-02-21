@@ -24,6 +24,10 @@ public slots:
 
 protected:
 	kGuiScenePanel* mPanel;
+
+signals:
+	void rejected();
+	void accepted();
 };
 
 #endif // KEMBEDDEDWIDGET_H
