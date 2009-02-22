@@ -26,11 +26,12 @@ LANGUAGE	= C++/Qt4
 TARGET	= $$quote(Kiess)
 DESTDIR	= bin
 CONFIG	+= qt resources debug_and_release warn_on thread x11 windows console embed_manifest_exe x86 ppc app_bundle
+QT	= core gui network opengl
 BUILD_PATH	= ./build
 
 CONFIG(debug, debug|release) {
 	#Debug
-	CONFIG	+= console
+	CONFIG	*= console
 	unix:TARGET	= $$join(TARGET,,,_debug)
 	else:TARGET	= $$join(TARGET,,,d)
 	unix:OBJECTS_DIR	= $${BUILD_PATH}/debug/.obj/unix
@@ -39,7 +40,8 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/debug/.ui
 	MOC_DIR	= $${BUILD_PATH}/debug/.moc
 	RCC_DIR	= $${BUILD_PATH}/debug/.rcc
-	win32-msvc*:DEFINES	+= _USE_MATH_DEFINES
+	unix:LIBS	*= -liris_kiess_debug
+	else:LIBS	*= -liris_kiessd
 } else {
 	#Release
 	unix:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/unix
@@ -48,8 +50,24 @@ CONFIG(debug, debug|release) {
 	UI_DIR	= $${BUILD_PATH}/release/.ui
 	MOC_DIR	= $${BUILD_PATH}/release/.moc
 	RCC_DIR	= $${BUILD_PATH}/release/.rcc
-	win32-msvc*:DEFINES	+= _USE_MATH_DEFINES
+	LIBS	*= -liris_kiess
 }
+
+win32-msvc*:DEFINES	+= _USE_MATH_DEFINES
+
+INCLUDEPATH	= src/gui \
+	src/network \
+	src/board \
+	src \
+	src/network/jabber
+
+include( src/3rdparty/libiris/libiris.pri )
+
+RESOURCES	= src/resources/resources.qrc
+
+FORMS	= src/gui/kPropertiesWidget.ui \
+	src/gui/kSingleWidget.ui \
+	src/gui/kAboutWidget.ui
 
 HEADERS	= src/network/kiessxmpp.h \
 	src/network/kiessxmppmechanism.h \
@@ -65,7 +83,11 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/gui/kGuiScene.h \
 	src/gui/kGuiScenePanel.h \
 	src/gui/kGuiScenePanelItem.h \
-	src/kHelper.h
+	src/kHelper.h \
+	src/network/jabber/JabberClient.h \
+	src/network/jabber/PrivacyList.h \
+	src/network/jabber/PrivacyListItem.h \
+	src/network/jabber/PrivacyManager.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -80,15 +102,8 @@ SOURCES	= src/main.cpp \
 	src/gui/kGuiScene.cpp \
 	src/gui/kGuiScenePanel.cpp \
 	src/gui/kGuiScenePanelItem.cpp \
-	src/kHelper.cpp
-
-QT	= core gui network opengl
-RESOURCES	= src/resources/resources.qrc
-
-FORMS	= src/gui/kPropertiesWidget.ui \
-	src/gui/kSingleWidget.ui \
-	src/gui/kAboutWidget.ui
-INCLUDEPATH	= src/gui \
-	src/network \
-	src/board \
-	src
+	src/kHelper.cpp \
+	src/network/jabber/JabberClient.cpp \
+	src/network/jabber/PrivacyListItem.cpp \
+	src/network/jabber/PrivacyManager.cpp \
+	src/network/jabber/PrivacyList.cpp
