@@ -75,21 +75,6 @@ void kChatWidget::_q_incomingFileTransfer()
 void kChatWidget::_q_rosterRequestFinished( bool success )
 {
 	qWarning() << "rosterRequestFinished" << success;
-	/*
-	if ( success )
-	{
-		Message msg( Jid( "pasnox@gmail.com" ) );
-		msg.setFrom( jid() );
-		msg.setType( "chat" );
-		msg.setBody( "mon message depuis kiess", "fr" );
-		msg.addEvent( OfflineEvent );
-		msg.addEvent( ComposingEvent );
-		msg.addEvent( DeliveredEvent );
-		msg.addEvent( DisplayedEvent );
-		
-		sendMessage( msg );
-	}
-	*/
 }
 
 void kChatWidget::_q_newContact( const XMPP::RosterItem& item )
@@ -119,7 +104,13 @@ void kChatWidget::_q_resourceUnavailable( const XMPP::Jid& jid, const XMPP::Reso
 
 void kChatWidget::_q_messageReceived( const XMPP::Message& message )
 {
-	qWarning() << "messageReceived";
+	QString text = QString( "[%1] %2: %3" )// (%4)" )
+		.arg( QTime::currentTime().toString( "hh:mm" ) )
+		.arg( message.from().resource() )
+		.arg( message.body() );
+		//.arg( message.subject() );
+	
+	pteChat->appendPlainText( text );
 }
 
 void kChatWidget::_q_groupChatJoined( const XMPP::Jid& jid )
@@ -145,4 +136,20 @@ void kChatWidget::_q_groupChatError( const XMPP::Jid& jid, int error, const QStr
 void kChatWidget::_q_subscription( const XMPP::Jid& jid, const QString& type )
 {
 	qWarning() << "subscription" << jid.full() << type;
+}
+
+void kChatWidget::on_leChat_returnPressed()
+{
+	Message msg( Jid( "kiess@conference.jabber.org" ) );
+	msg.setFrom( mClient->jid() );
+	msg.setType( "groupchat" );
+	msg.setBody( leChat->text(), "fr" );
+	msg.addEvent( OfflineEvent );
+	msg.addEvent( ComposingEvent );
+	msg.addEvent( DeliveredEvent );
+	msg.addEvent( DisplayedEvent );
+	
+	mClient->sendMessage( msg );
+	
+	leChat->clear();
 }
