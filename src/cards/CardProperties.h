@@ -1,6 +1,7 @@
 #ifndef CARDPROPERTIES_H
 #define CARDPROPERTIES_H
 
+#include <QString>
 class CardProperties
 {
 	public:
@@ -106,28 +107,41 @@ class CardProperties
 	public :
 		CardProperties();
 		
-		HAIR_PROP_VALUES getHairProperties(HAIR_PROP a_prop);
+		HAIR_PROP_VALUES getHairProperties(HAIR_PROP a_prop) const;
 		void setHairProperties(HAIR_PROP_VALUES a_val, HAIR_PROP a_prop);
 		
-		EYES_PROP_VALUES getEyesProperties(EYES_PROP a_prop);
+		EYES_PROP_VALUES getEyesProperties(EYES_PROP a_prop) const;
 		void setEyesProperties(EYES_PROP_VALUES a_val, EYES_PROP a_prop);
 	
-		NOSE_PROP_VALUES getNoseProperties(NOSE_PROP a_prop = NOSE_PROP_SIZE);
+		NOSE_PROP_VALUES getNoseProperties(NOSE_PROP a_prop = NOSE_PROP_SIZE) const;
 		void setNoseProperties(NOSE_PROP_VALUES a_val, NOSE_PROP a_prop = NOSE_PROP_SIZE);
 	
-		MOUTH_PROP_VALUES getMouthProperties(MOUTH_PROP a_prop);
+		MOUTH_PROP_VALUES getMouthProperties(MOUTH_PROP a_prop) const;
 		void setMouthProperties(MOUTH_PROP_VALUES a_val, MOUTH_PROP a_prop);
 	
-		SKIN_PROP_VALUES getNoseProperties(SKIN_PROP a_prop = SKIN_PROP_COLOR);
-		void setNoseProperties(SKIN_PROP_VALUES a_val, SKIN_PROP a_prop = SKIN_PROP_COLOR);
+		SKIN_PROP_VALUES getSkinProperties(SKIN_PROP a_prop = SKIN_PROP_COLOR) const;
+		void setSkinProperties(SKIN_PROP_VALUES a_val, SKIN_PROP a_prop = SKIN_PROP_COLOR);
 	
-		SEX_PROP_VALUES getSex();
+		SEX_PROP_VALUES getSex() const;
 		void setSex(SEX_PROP_VALUES a_val);
 	
-		OTHER_PROP_VALUES getOtherProperties();
+		OTHER_PROP_VALUES getOtherProperties() const;
 		void setOtherProperties(OTHER_PROP_VALUES a_val);
 		bool hasOtherProperties(OTHER_PROP_VALUES a_val);
-	
+		
+		//---------------------------------------------------------------------
+		static HAIR_PROP_VALUES string2HairProp(const QString& a_string);
+		static EYES_PROP_VALUES string2EyesProp(const QString& a_string);
+		static NOSE_PROP_VALUES string2NoseProp(const QString& a_string);
+		static MOUTH_PROP_VALUES string2MouthProp(const QString& a_string);
+		static SKIN_PROP_VALUES string2SkinProp(const QString& a_string);
+		static SEX_PROP_VALUES string2SexProp(const QString& a_string);
+		static OTHER_PROP_VALUES string2OtherProp(const QString& a_string);
+
+		//---------------------------------------------------------------------
+		QString toString() const;
+
+		
 	private:
 		HAIR_PROP_VALUES 
 				m_hair_prop_color,
