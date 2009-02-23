@@ -11,6 +11,8 @@ class kSingleWidget : public kEmbeddedWidget, public Ui::kSingleWidget
 public:
 	kSingleWidget( kGuiScenePanel* panel );
 	virtual ~kSingleWidget();
+	
+	kClient* client() const;
 
 public slots:
 	virtual void loadDatas();

@@ -2,10 +2,12 @@
 #include "kGuiScene.h"
 #include "kGuiScenePanel.h"
 #include "kGuiScenePanelItem.h"
+#include "kChatItem.h"
 
 #include "kSingleWidget.h"
 #include "kPropertiesWidget.h"
 #include "kAboutWidget.h"
+#include "kChatWidget.h"
 
 #include "kHelper.h"
 
@@ -27,7 +29,7 @@ kGui::kGui( QWidget* parent )
 #ifndef QT_NO_OPENGL
 	setViewport( new QGLWidget( QGLFormat( QGL::SampleBuffers ) ) );
 #endif
-
+	
 	// init scene
 	mScene = new kGuiScene( this );
 	mScene->setSceneRect( QRect( QPoint( 0, 0 ), sizeHint() ) );
@@ -38,26 +40,42 @@ kGui::kGui( QWidget* parent )
 	qreal y = ( sizeHint().height() -min ) /2;
 	QRectF bounds = kHelper::translatedRectXY( QRectF( QPointF( 0, 0 ), QSizeF( min, min ) ), x, y );
 	
-	kGuiScenePanel* mPanel = new kGuiScenePanel( bounds, QSize( 2, 2 ), mScene );
+	mPanel = new kGuiScenePanel( bounds, QSize( 2, 2 ), mScene );
 	mPanel->setCurrentItem( QPoint(), false );
 	mPanel->setPos( x, y );
+	
+	// widgets
+	mWidgets[ Single ] = new kSingleWidget( mPanel );
+	//mWidgets[ Team ] = new ;
+	mWidgets[ Properties ] = new kPropertiesWidget( mPanel );
+	mWidgets[ About ] = new kAboutWidget( mPanel );
+	mWidgets[ Chat ] = new kChatWidget();
 	
 	// init panel items widget
 	// single player game
 	mPanel->item( QPoint( 0, 0 ) )->setPixmap( QPixmap( ":/gui/single.png" ) );
-	mPanel->item( QPoint( 0, 0 ) )->setWidget( new kSingleWidget( mPanel ) );
+	mPanel->item( QPoint( 0, 0 ) )->setWidget( qobject_cast<kEmbeddedWidget*>( mWidgets[ Single ] ) );
 	// team player game
 	mPanel->item( QPoint( 1, 0 ) )->setPixmap( QPixmap( ":/gui/team.png" ) );
 	// properties
 	mPanel->item( QPoint( 0, 1 ) )->setPixmap( QPixmap( ":/gui/properties.png" ) );
-	mPanel->item( QPoint( 0, 1 ) )->setWidget( new kPropertiesWidget( mPanel ) );
+	mPanel->item( QPoint( 0, 1 ) )->setWidget( qobject_cast<kEmbeddedWidget*>( mWidgets[ Properties ] ) );
 	// about
 	mPanel->item( QPoint( 1, 1 ) )->setPixmap( QPixmap( ":/gui/about.png" ) );
-	mPanel->item( QPoint( 1, 1 ) )->setWidget( new kAboutWidget( mPanel ) );
+	mPanel->item( QPoint( 1, 1 ) )->setWidget( qobject_cast<kEmbeddedWidget*>( mWidgets[ About ] ) );
+	
+	// chat item
+	mChatItem = new kChatItem( mScene->sceneRect(), qobject_cast<kChatWidget*>( mWidgets[ Chat ] ) );
+	mChatItem->setVisible( false );
 	
 	// set scene
 	setScene( mScene );
 	mScene->addItem( mPanel );
+	mScene->addItem( mChatItem );
+	
+	// connections
+	connect( mPanel, SIGNAL( itemRejected( QWidget* ) ), this, SLOT( itemRejected( QWidget* ) ) );
+	connect( mPanel, SIGNAL( itemAccepted( QWidget* ) ), this, SLOT( itemAccepted( QWidget* ) ) );
 }
 
 kGui::~kGui()
@@ -78,4 +96,37 @@ void kGui::resizeEvent( QResizeEvent* event )
 kGuiScene* kGui::scene() const
 {
 	return mScene;
+}
+
+void kGui::itemRejected( QWidget* widget )
+{
+	Q_UNUSED( widget );
+}
+
+void kGui::itemAccepted( QWidget* widget )
+{
+	switch ( mWidgets.key( widget ) )
+	{
+		case Single:
+		{
+			kSingleWidget* ks = qobject_cast<kSingleWidget*>( widget );
+			kChatWidget* kc = qobject_cast<kChatWidget*>( mWidgets[ Chat ] );
+			
+			qWarning() << "single" << ks << kc << widget;
+			
+			kc->setClient( ks->client() );
+			mPanel->setVisible( false );
+			mChatItem->setVisible( true );
+			break;
+		}
+		case Team:
+			break;
+		case Properties:
+			break;
+		case About:
+			break;
+		case Chat:
+		default:
+			break;
+	}
 }

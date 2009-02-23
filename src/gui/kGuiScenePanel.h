@@ -56,6 +56,10 @@ protected slots:
 	
 	void item_rejected();
 	void item_accepted();
+
+signals:
+	void itemRejected( QWidget* widget );
+	void itemAccepted( QWidget* widget );
 };
 
 #endif // KGUISCENEPANEL_H

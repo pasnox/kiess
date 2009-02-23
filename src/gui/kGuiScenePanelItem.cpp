@@ -140,6 +140,11 @@ void kGuiScenePanelItem::loadWidget( kEmbeddedWidget* widget )
 	connect( widget, SIGNAL( accepted() ), panel(), SLOT( item_accepted() ) );
 }
 
+QWidget* kGuiScenePanelItem::currentWidget() const
+{
+	return mProxyWidget ? mProxyWidget->widget() : 0;
+}
+
 void kGuiScenePanelItem::unloadWidget()
 {
 	Q_ASSERT( mProxyWidget );

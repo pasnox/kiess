@@ -26,6 +26,7 @@ public:
 	kEmbeddedWidget* widget() const;
 	
 	void loadWidget( kEmbeddedWidget* widget );
+	QWidget* currentWidget() const;
 	void unloadWidget();
 	
 	kGuiScenePanel* panel() const;
