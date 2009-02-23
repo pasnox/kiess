@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE KiessCardSet>
+<KiessCardSet version="1.0">
+    <card>
+        <name>Roberta</name>
+        <hair color="BLONDE" shape="STRAIGHT"/>
+        <eyes color="BROWN" eyebrows="THIN"/>
+        <nose size="SMALL"/>
+        <mouth size="SMALL" expr="SMILE"/>
+        <skin color="WHITE"/>
+        <sex gender="FEMALE"/>
+        <other value="NECKLACE"/>
+        <other value="HAT"/>
+    </card>
+
+    <card>
+        <name>Carlos</name>
+        <hair color="RED" shape="LONG"/>
+        <eyes color="BLUE" eyebrows="THIN"/>
+        <nose size="SMALL"/>
+        <mouth size="SMALL" expr="SAD"/>
+        <skin color="WHITE"/>
+        <sex gender="MALE"/>
+        <other value="MUSTACHE"/>
+    </card>
+
+
+</KiessCardSet>
