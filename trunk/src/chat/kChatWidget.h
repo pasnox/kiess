@@ -34,6 +34,8 @@ protected slots:
 	void _q_groupChatPresence( const XMPP::Jid& jid, const XMPP::Status& status );
 	void _q_groupChatError( const XMPP::Jid& jid, int error, const QString& reason );
 	void _q_subscription( const XMPP::Jid& jid, const QString& type );
+	
+	void on_leChat_returnPressed();
 };
 
 #endif // KCHATWIDGET_H
