@@ -92,7 +92,11 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/network/jabber/PrivacyManager.h \
 	src/network/kClient.h \
 	src/chat/kChatWidget.h \
-	src/gui/kChatItem.h
+	src/gui/kChatItem.h \
+	src/cards/CardSet.h \
+	src/cards/Card.h \
+	src/cards/CardLoader.h \
+	src/cards/CardProperties.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -114,4 +118,8 @@ SOURCES	= src/main.cpp \
 	src/network/jabber/PrivacyList.cpp \
 	src/network/kClient.cpp \
 	src/chat/kChatWidget.cpp \
-	src/gui/kChatItem.cpp
+	src/gui/kChatItem.cpp \
+	src/cards/CardProperties.cpp \
+	src/cards/Card.cpp \
+	src/cards/CardLoader.cpp \
+	src/cards/CardSet.cpp
