@@ -87,7 +87,8 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/network/jabber/JabberClient.h \
 	src/network/jabber/PrivacyList.h \
 	src/network/jabber/PrivacyListItem.h \
-	src/network/jabber/PrivacyManager.h
+	src/network/jabber/PrivacyManager.h \
+	src/network/kClient.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -106,4 +107,5 @@ SOURCES	= src/main.cpp \
 	src/network/jabber/JabberClient.cpp \
 	src/network/jabber/PrivacyListItem.cpp \
 	src/network/jabber/PrivacyManager.cpp \
-	src/network/jabber/PrivacyList.cpp
+	src/network/jabber/PrivacyList.cpp \
+	src/network/kClient.cpp
