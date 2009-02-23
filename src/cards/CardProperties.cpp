@@ -192,10 +192,10 @@ CardProperties::NOSE_PROP_VALUES CardProperties::string2NoseProp(const QString& 
 		return CardProperties::NOSE_PROP_SIZE_SMALL;
 	else
 	if(a_string == "MEDIUM")
-		NOSE_PROP_SIZE_MEDIUM;
+		return NOSE_PROP_SIZE_MEDIUM;
 	else
 	if(a_string == "BIG")
-		NOSE_PROP_SIZE_BIG;
+		return NOSE_PROP_SIZE_BIG;
 }
 		 
 CardProperties::MOUTH_PROP_VALUES CardProperties::string2MouthProp(const QString& a_string)
