@@ -112,9 +112,7 @@ void kGui::itemAccepted( QWidget* widget )
 			kSingleWidget* ks = qobject_cast<kSingleWidget*>( widget );
 			kChatWidget* kc = qobject_cast<kChatWidget*>( mWidgets[ Chat ] );
 			
-			qWarning() << "single" << ks << kc << widget;
-			
-			kc->setClient( ks->client() );
+			kc->setClient( ks->client(), ks->leNick->text() );
 			mPanel->setVisible( false );
 			mChatItem->setVisible( true );
 			break;
