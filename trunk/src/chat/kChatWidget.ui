@@ -1,0 +1,75 @@
+<ui version="4.0" >
+ <class>kChatWidget</class>
+ <widget class="QFrame" name="kChatWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>626</width>
+    <height>243</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Properties</string>
+  </property>
+  <property name="frameShape" >
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow" >
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QGroupBox" name="gbChat" >
+     <property name="title" >
+      <string>Kiess discution board</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <widget class="QSplitter" name="splitter_2" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <widget class="QSplitter" name="splitter" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QPlainTextEdit" name="pteChat" >
+          <property name="tabChangesFocus" >
+           <bool>true</bool>
+          </property>
+          <property name="undoRedoEnabled" >
+           <bool>false</bool>
+          </property>
+          <property name="readOnly" >
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth" >
+           <number>30</number>
+          </property>
+         </widget>
+         <widget class="QListWidget" name="lwChat" >
+          <property name="maximumSize" >
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QLineEdit" name="leChat" />
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="dbbButtons" >
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+</ui>

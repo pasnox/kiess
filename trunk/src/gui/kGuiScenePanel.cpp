@@ -254,10 +254,12 @@ void kGuiScenePanel::flipTimeLineChanged( qreal value )
 
 void kGuiScenePanel::item_rejected()
 {
+	emit itemRejected( mFlippedItem->currentWidget() );
 	mFlippedItem->unloadWidget();
 }
 
 void kGuiScenePanel::item_accepted()
 {
+	emit itemAccepted( mFlippedItem->currentWidget() );
 	mFlippedItem->unloadWidget();
 }

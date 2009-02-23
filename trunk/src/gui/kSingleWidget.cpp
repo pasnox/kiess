@@ -3,15 +3,20 @@
 #include <QMessageBox>
 
 kSingleWidget::kSingleWidget( kGuiScenePanel* panel )
-	: kEmbeddedWidget( panel )
+	: kEmbeddedWidget( panel ),
+	mClient( 0 )
 {
-	mClient = 0;
 	setupUi( this );
 }
 
 kSingleWidget::~kSingleWidget()
 {
 	delete mClient;
+}
+
+kClient* kSingleWidget::client() const
+{
+	return mClient;
 }
 
 kClient* kSingleWidget::newClient()
@@ -29,9 +34,14 @@ void kSingleWidget::connected( bool success )
 {
 	setEnabled( true );
 	
-	const QString msg = success ? tr( "Connexion success" ) : tr( "Connexion failed" );
-	
-	QMessageBox::information( 0, tr( "Information..." ), msg );
+	if ( success )
+	{
+		emit accepted();
+	}
+	else
+	{
+		QMessageBox::information( 0, tr( "Information..." ), tr( "Connexion failed" ) );
+	}
 }
 
 void kSingleWidget::loadDatas()
@@ -82,5 +92,4 @@ void kSingleWidget::reject()
 void kSingleWidget::accept()
 {
 	saveDatas();
-	//emit accepted();
 }

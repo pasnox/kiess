@@ -52,11 +52,11 @@ void kClient::_q_connected()
 	//return;
 	
 	Status status( Status::Online, tr( "Playing Kiess Game" ), 0 );
-	setPresence( status );
+	//setPresence( status );
 	
 	joinGroupChat( "conference.jabber.org", "Kiess", "Monkey IDE" );
 	
-	requestRoster();
+	//requestRoster();
 }
 
 void kClient::_q_csAuthenticated()

@@ -59,7 +59,8 @@ INCLUDEPATH	= src/gui \
 	src/network \
 	src/board \
 	src \
-	src/network/jabber
+	src/network/jabber \
+	src/chat
 
 include( src/3rdparty/libiris/libiris.pri )
 
@@ -67,7 +68,8 @@ RESOURCES	= src/resources/resources.qrc
 
 FORMS	= src/gui/kPropertiesWidget.ui \
 	src/gui/kSingleWidget.ui \
-	src/gui/kAboutWidget.ui
+	src/gui/kAboutWidget.ui \
+	src/chat/kChatWidget.ui
 
 HEADERS	= src/network/kiessxmpp.h \
 	src/network/kiessxmppmechanism.h \
@@ -88,7 +90,9 @@ HEADERS	= src/network/kiessxmpp.h \
 	src/network/jabber/PrivacyList.h \
 	src/network/jabber/PrivacyListItem.h \
 	src/network/jabber/PrivacyManager.h \
-	src/network/kClient.h
+	src/network/kClient.h \
+	src/chat/kChatWidget.h \
+	src/gui/kChatItem.h
 
 SOURCES	= src/main.cpp \
 	src/network/kiessxmpp.cpp \
@@ -108,4 +112,6 @@ SOURCES	= src/main.cpp \
 	src/network/jabber/PrivacyListItem.cpp \
 	src/network/jabber/PrivacyManager.cpp \
 	src/network/jabber/PrivacyList.cpp \
-	src/network/kClient.cpp
+	src/network/kClient.cpp \
+	src/chat/kChatWidget.cpp \
+	src/gui/kChatItem.cpp
