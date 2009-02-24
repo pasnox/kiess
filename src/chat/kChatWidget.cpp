@@ -2,6 +2,10 @@
 
 #include <QMessageBox>
 
+const QString mKiessHost = "conference.jabber.org";
+const QString mKiessRoom = "kiess";
+const QString mKiessFull = "kiess@conference.jabber.org";
+
 kChatWidget::kChatWidget()
 	: QFrame( 0 ),
 	mClient( 0 )
@@ -60,7 +64,7 @@ void kChatWidget::setClient( kClient* client, const QString& nick )
 			Status status( Status::Online, tr( "Playing Kiess Game" ), 0 );
 			mClient->setPresence( status );
 			
-			mClient->joinGroupChat( "conference.jabber.org", "Kiess", nick );
+			mClient->joinGroupChat( mKiessHost, mKiessRoom, nick );
 	
 			//requestRoster();
 		}
@@ -140,7 +144,8 @@ void kChatWidget::_q_subscription( const XMPP::Jid& jid, const QString& type )
 
 void kChatWidget::on_leChat_returnPressed()
 {
-	Message msg( Jid( "kiess@conference.jabber.org" ) );
+	Jid jid( mKiessFull );
+	Message msg( jid );
 	msg.setFrom( mClient->jid() );
 	msg.setType( "groupchat" );
 	msg.setBody( leChat->text(), "fr" );
@@ -152,4 +157,10 @@ void kChatWidget::on_leChat_returnPressed()
 	mClient->sendMessage( msg );
 	
 	leChat->clear();
+}
+
+void kChatWidget::reject()
+{
+	mClient->leaveGroupChat( mKiessHost, mKiessRoom );
+	//setClient( 0 );
 }
