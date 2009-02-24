@@ -13,7 +13,7 @@ public:
 	virtual ~kChatWidget();
 	
 	kClient* client() const;
-	void setClient( kClient* client, const QString& nick );
+	void setClient( kClient* client, const QString& nick = QString::null );
 
 public slots:
 
@@ -36,6 +36,11 @@ protected slots:
 	void _q_subscription( const XMPP::Jid& jid, const QString& type );
 	
 	void on_leChat_returnPressed();
+	
+	void reject();
+
+signals:
+	void leftChat();
 };
 
 #endif // KCHATWIDGET_H
