@@ -128,8 +128,22 @@ void kChatWidget::_q_groupChatLeft( const XMPP::Jid& jid )
 }
 
 void kChatWidget::_q_groupChatPresence( const XMPP::Jid& jid, const XMPP::Status& status )
-{
-	qWarning() << "groupChatPresence" << jid.full() << status.show() << status.status();
+{	
+	QListWidgetItem* item = mUsers.value( jid.full() );
+	
+	if ( !item && status.type() != XMPP::Status::Offline )
+	{
+		item = new QListWidgetItem( lwChat );
+		mUsers[ jid.full() ] = item;
+	}
+	else if ( !item && status.type() == XMPP::Status::Offline )
+	{
+		delete mUsers.take( jid.full() );
+		return;
+	}
+	
+	item->setText( jid.resource() );
+	item->setData( Qt::UserRole, jid.full() );
 }
 
 void kChatWidget::_q_groupChatError( const XMPP::Jid& jid, int error, const QString& reason )
