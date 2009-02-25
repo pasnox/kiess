@@ -19,6 +19,7 @@ public slots:
 
 protected:
 	kClient* mClient;
+	QMap<QString, QListWidgetItem*> mUsers;
 
 protected slots:
 	void _q_incomingFileTransfer();
