@@ -1,0 +1,7 @@
+ pour les cheveux :
+CURLY a la place de FRIZZY
+chauve : donc prévoir la couleur NONE et la shape BOLD
+
+Boucle d'oreille : EARRINGS
+
+Prévoir aussi eyebrows = NONE
