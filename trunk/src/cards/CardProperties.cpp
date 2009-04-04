@@ -135,6 +135,9 @@ bool CardProperties::hasOtherProperties(CardProperties::OTHER_PROP_VALUES a_val)
 }
  CardProperties::HAIR_PROP_VALUES CardProperties::string2HairProp(const QString& a_string)
 {
+	if(a_string == "NONE")
+		return CardProperties::HAIR_PROP_COLOR_NONE;
+	else
 	if(a_string == "BLONDE")
 		return CardProperties::HAIR_PROP_COLOR_BLONDE;
 	else
@@ -154,8 +157,8 @@ bool CardProperties::hasOtherProperties(CardProperties::OTHER_PROP_VALUES a_val)
 	if(a_string == "WAVY")
 		return CardProperties::HAIR_PROP_SHAPE_WAVY;
 	else
-	if(a_string == "FRIZZY")
-		return CardProperties::HAIR_PROP_SHAPE_FRIZZY;
+	if(a_string == "CURLY")
+		return CardProperties::HAIR_PROP_SHAPE_CURLY;
 	else
 	if(a_string == "LONG")
 		return CardProperties::HAIR_PROP_SHAPE_LONG;
@@ -257,6 +260,9 @@ CardProperties::OTHER_PROP_VALUES CardProperties::string2OtherProp(const QString
 	else
 	if(a_string == "NECKLACE")
 		return CardProperties::OTHER_PROP_NECKLACE;
+	else
+	if(a_string == "OTHER_PROP_EARRING")
+		return CardProperties::OTHER_PROP_EARRING;
 }
 		 
 //-----------------------------------------------------------------------------
