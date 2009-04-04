@@ -13,6 +13,7 @@ class CardProperties
 	};
 	enum HAIR_PROP_VALUES 
 	{
+		HAIR_PROP_COLOR_NONE     = 0x00000000, 
 		HAIR_PROP_COLOR_BLONDE   = 0x00000001, 
 		HAIR_PROP_COLOR_BROWN    = 0x00000002,
 		HAIR_PROP_COLOR_BLACK    = 0x00000004, 
@@ -20,7 +21,7 @@ class CardProperties
 		
 		HAIR_PROP_SHAPE_STRAIGHT = 0x00000010, 
 		HAIR_PROP_SHAPE_WAVY     = 0x00000020, 
-		HAIR_PROP_SHAPE_FRIZZY   = 0x00000040, 
+		HAIR_PROP_SHAPE_CURLY    = 0x00000040, 
 		HAIR_PROP_SHAPE_LONG     = 0x00000080, 
 		HAIR_PROP_SHAPE_SHORT    = 0x00000100
 	};
@@ -39,7 +40,7 @@ class CardProperties
 		
 		EYES_PROP_EYEBROWS_THIN   = 0x00000008,
 		EYES_PROP_EYEBROWS_NORMAL = 0x00000010,
-		EYES_PROP_EYEBROWS_HUGE   = 0x00000012
+		EYES_PROP_EYEBROWS_HUGE   = 0x00000020
 	};
 	//------------------------------------------------------------------------
 	enum NOSE_PROP
@@ -69,7 +70,7 @@ class CardProperties
 		
 		MOUTH_PROP_EXPR_SMILE   = 0x00000008,
 		MOUTH_PROP_EXPR_NONE    = 0x00000010,
-		MOUTH_PROP_EXPR_SAD     = 0x00000012
+		MOUTH_PROP_EXPR_SAD     = 0x00000020
 	};
 
 	
@@ -100,7 +101,8 @@ class CardProperties
 		OTHER_PROP_BEARD    = 0x00000002,
 		OTHER_PROP_GLASSES  = 0x00000004,
 		OTHER_PROP_HAT      = 0x00000008,
-		OTHER_PROP_NECKLACE = 0x00000010
+		OTHER_PROP_NECKLACE = 0x00000010,
+		OTHER_PROP_EARRING  = 0x00000020
 	};
 	
 	//------------------------------------------------------------------------
